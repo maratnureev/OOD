@@ -5,18 +5,6 @@
 #include <exception>
 #include <functional>
 
-struct CompareByPriority {
-	template <typename T>
-
-	bool operator()(const T& l,
-		const T& r) const
-	{
-		if (l.second != r.second) {
-			return l.second < r.second;
-		}
-		return l.first < r.first;
-	}
-};
 
 /*
 	Шаблонный интерфейс IObserver. Его должен реализовывать класс,

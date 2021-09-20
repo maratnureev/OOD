@@ -90,8 +90,6 @@ private:
 	Statistic m_temperature;
 	Statistic m_pressure;
 	Statistic m_humidity;
-	unsigned m_countAcc = 0;
-
 };
 
 class CWeatherData : public CObservable<SWeatherInfo>

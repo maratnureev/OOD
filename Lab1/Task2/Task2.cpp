@@ -38,7 +38,6 @@ struct IFlyBehavior
 {
 	virtual ~IFlyBehavior() {};
 	virtual void Fly() = 0;
-	virtual void CountFlight() = 0;
 };
 
 class FlyBehavior : public IFlyBehavior
@@ -227,6 +226,11 @@ int main()
 	PlayWithDuck(mallardDuck);
 	PlayWithDuck(mallardDuck);
 	PlayWithDuck(mallardDuck);
+	mallardDuck.SetFlyBehavior(make_unique<FlyNoWay>());
+	PlayWithDuck(mallardDuck);
+	mallardDuck.SetFlyBehavior(make_unique<FlyWithWings>());
+	PlayWithDuck(mallardDuck);
+
 
 	RedheadDuck redheadDuck;
 	PlayWithDuck(redheadDuck);

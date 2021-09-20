@@ -16,9 +16,8 @@ private:
 	*/
 	void Update(SWeatherInfo const& data) override
 	{
-		std::shared_ptr<CMockDisplay> thisShared(this);
-		m_wd->RemoveObserver(thisShared);
-	}
+		m_wd->RemoveObserver(*this);
+	} 
 
 	CWeatherData* m_wd;
 };
@@ -26,19 +25,12 @@ private:
 SCENARIO("Delete during update test")
 {
 	CWeatherData wd;
-	auto mockDisplay = std::make_shared<CMockDisplay>(wd);
+	CMockDisplay mockDisplay(wd);
 	wd.RegisterObserver(mockDisplay);
-	auto display = std::make_shared<CDisplay>();
+	CDisplay display;
 	wd.RegisterObserver(display);
-
-	auto statsDisplay = std::make_shared<CStatsDisplay>();
+	CStatsDisplay statsDisplay;
 	wd.RegisterObserver(statsDisplay);
-
-	wd.SetMeasurements(3, 0.7, 760);
-	wd.SetMeasurements(4, 0.8, 761);
-
-	wd.RemoveObserver(statsDisplay);
-
-	wd.SetMeasurements(10, 0.8, 761);
-	wd.SetMeasurements(-10, 0.8, 761);
+	REQUIRE_NOTHROW(wd.SetMeasurements(10, 0.8, 761));
+	REQUIRE_NOTHROW(wd.SetMeasurements(-10, 0.8, 761));
 }
