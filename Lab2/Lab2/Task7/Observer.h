@@ -1,5 +1,4 @@
 #pragma once
-
 #include <set>
 #include <map>
 #include <functional>
@@ -10,13 +9,6 @@
 	Параметром шаблона является тип аргумента,
 	передаваемого Наблюдателю в метод Update
 */
-
-enum EventType {
-	WIND_CHANGED,
-	TEMPERATURE_CHANGED,
-	PRESSURE_CHANGED,
-	HUMIDITY_CHANGED,
-};
 
 template <typename T>
 class IObserver
@@ -30,29 +22,29 @@ public:
 	Шаблонный интерфейс IObservable. Позволяет подписаться и отписаться на оповещения, а также
 	инициировать рассылку уведомлений зарегистрированным наблюдателям.
 */
-template <typename T>
+template <typename T, typename E>
 class IObservable
 {
 public:
 	virtual ~IObservable() = default;
-	virtual void RegisterObserver(IObserver<T>& observer, EventType eventType) = 0;
-	virtual void NotifyObservers(EventType eventType) = 0;
-	virtual void RemoveObserver(IObserver<T>& observer, EventType eventType) = 0;
+	virtual void RegisterObserver(IObserver<T>& observer, E eventType) = 0;
+	virtual void NotifyObservers(E eventType) = 0;
+	virtual void RemoveObserver(IObserver<T>& observer, E eventType) = 0;
 };
 
 // Реализация интерфейса IObservable
-template <class T>
-class CObservable : public IObservable<T>
+template <class T, typename E>
+class CObservable : public IObservable<T, E>
 {
 public:
 	typedef IObserver<T> ObserverType;
 
-	void RegisterObserver(ObserverType& observer, EventType eventType) override
+	void RegisterObserver(ObserverType& observer, E eventType) override
 	{
 		m_observers[eventType].insert(&observer);
 	}
 
-	void NotifyObservers(EventType eventType) override
+	void NotifyObservers(E eventType) override
 	{
 		T data = GetChangedData();
 		for (auto& observer : m_observers[eventType])
@@ -61,7 +53,7 @@ public:
 		}
 	}
 
-	void RemoveObserver(ObserverType& observer, EventType eventType) override
+	void RemoveObserver(ObserverType& observer, E eventType) override
 	{
 		m_observers[eventType].erase(&observer);
 	}
@@ -72,5 +64,5 @@ protected:
 	virtual T GetChangedData()const = 0;
 
 private:
-	std::map<EventType, std::set<ObserverType*>> m_observers;
+	std::map<E, std::set<ObserverType*>> m_observers;
 };

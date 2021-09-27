@@ -7,6 +7,13 @@
 #include <math.h>
 #include "Observer.h"
 
+enum class EventType {
+	WIND_CHANGED,
+	TEMPERATURE_CHANGED,
+	PRESSURE_CHANGED,
+	HUMIDITY_CHANGED,
+};
+
 const double HALF_CIRCLE = 180;
 const double FULL_CIRCLE = 360;
 
@@ -148,7 +155,7 @@ private:
 	WindStatistic m_windDirections;
 };
 
-class CWeatherData : public CObservable<SWeatherInfo>
+class CWeatherData : public CObservable<SWeatherInfo, EventType>
 {
 public:
 	// Температура в градусах Цельсия

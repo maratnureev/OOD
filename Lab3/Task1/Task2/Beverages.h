@@ -52,7 +52,7 @@ class CDoubleCappuccino : public CCoffee
 public:
 	CDoubleCappuccino()
 		:CCoffee("Double cappuccino")
-	{}
+	{}            
 
 	double GetCost() const override
 	{

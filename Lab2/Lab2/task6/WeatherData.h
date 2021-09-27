@@ -11,14 +11,20 @@
 const double HALF_CIRCLE = 180;
 const double FULL_CIRCLE = 360;
 
-struct SWeatherInfo
+struct SWeatherWindInfo
 {
 	double temperature = 0;
 	double humidity = 0;
 	double pressure = 0;
 	double windSpeed = 0;
 	double windDirection = 0;
-	std::string name;
+};
+
+struct SWeatherInfo
+{
+	double temperature = 0;
+	double humidity = 0;
+	double pressure = 0;
 };
 
 struct Statistic
@@ -42,14 +48,14 @@ struct WindStatistic
 	WindVector minWindVector;
 };
 
-class CDisplay : public IObserver<SWeatherInfo>
+class CDisplay : public IObserver<SWeatherWindInfo>
 {
 private:
 	/* Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
 		Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
 		остается публичным
 	*/
-	void Update(SWeatherInfo const& data) override
+	void Update(SWeatherWindInfo const& data) override
 	{
 		std::cout << "Current Temp " << data.temperature << std::endl;
 		std::cout << "Current Hum " << data.humidity << std::endl;
@@ -58,40 +64,40 @@ private:
 	}
 };
 
-class CStatsDisplay : public IObserver<SWeatherInfo>
+class CStatsDisplay : public IObserver<SWeatherWindInfo>
 {
 public:
-	Statistic GetTemperature(std::string name)
+	Statistic GetTemperature()
 	{
-		return m_temperature[name];
+		return m_temperature;
 	}
 
-	Statistic GetPressure(std::string name)
+	Statistic GetPressure()
 	{
-		return m_pressure[name];
+		return m_pressure;
 	}
 
-	Statistic GetHumidity(std::string name)
+	Statistic GetHumidity()
 	{
-		return m_humidity[name];
+		return m_humidity;
 	}
 private:
 	/* Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
 	Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
 	остается публичным
 	*/
-	void Update(SWeatherInfo const& data) override
+	void Update(SWeatherWindInfo const& data) override
 	{
 		std::cout << "Temperature: " << std::endl;
-		UpdateCurrentIndicator(m_temperature[data.name], data.temperature, data.name);
+		UpdateCurrentIndicator(m_temperature, data.temperature);
 		std::cout << "Humidity: " << std::endl;
-		UpdateCurrentIndicator(m_humidity[data.name], data.humidity, data.name);
+		UpdateCurrentIndicator(m_humidity, data.humidity);
 		std::cout << "Pressure: " << std::endl;
-		UpdateCurrentIndicator(m_pressure[data.name], data.pressure, data.name);
-		UpdateWindIndicator(m_windSpeed[data.name], m_windDirections[data.name], data.windSpeed, data.windDirection, data.name);
+		UpdateCurrentIndicator(m_pressure, data.pressure);
+		UpdateWindIndicator(m_windSpeed, m_windDirections, data.windSpeed, data.windDirection);
 	}
 
-	void UpdateCurrentIndicator(Statistic& prevData, double currentValue, std::string observerName)
+	void UpdateCurrentIndicator(Statistic& prevData, double currentValue)
 	{
 		if (prevData.minValue > currentValue)
 		{
@@ -104,16 +110,15 @@ private:
 		prevData.accValue += currentValue;
 		++prevData.countAcc;
 
-		std::cout << "Place " << observerName << std::endl;
 		std::cout << "Max " << prevData.maxValue << std::endl;
 		std::cout << "Min " << prevData.minValue << std::endl;
 		std::cout << "Average " << (prevData.accValue / prevData.countAcc) << std::endl;
 		std::cout << "----------------" << std::endl;
 	}
 
-	void UpdateWindIndicator(Statistic& prevSpeedData, WindStatistic& prevDirectionData, double windSpeed, double windDirection, std::string observerName)
+	void UpdateWindIndicator(Statistic& prevSpeedData, WindStatistic& prevDirectionData, double windSpeed, double windDirection)
 	{
-		if (windDirection == 0 && windSpeed == 0)
+		if (windSpeed == 0)
 			return;
 		auto windVectorX = windSpeed * cos(windDirection * M_PI / HALF_CIRCLE);
 		auto windVectorY = windSpeed * sin(windDirection * M_PI / HALF_CIRCLE);
@@ -132,7 +137,6 @@ private:
 		prevSpeedData.accValue += windSpeed;
 		++prevSpeedData.countAcc;
 
-		WindVector windMeasurments;
 		prevDirectionData.avgWindVector.windVectorX += windVectorX;
 		prevDirectionData.avgWindVector.windVectorY += windVectorY;
 		double minDirection = atan2(prevDirectionData.minWindVector.windVectorY, prevDirectionData.minWindVector.windVectorX) * HALF_CIRCLE / M_PI;
@@ -147,24 +151,19 @@ private:
 		std::cout << "Direction " << ((avgDirection < 0) ? avgDirection + FULL_CIRCLE : avgDirection) << std::endl;
 	}
 
-	std::map<std::string, Statistic> m_temperature;
-	std::map<std::string, Statistic> m_pressure;
-	std::map<std::string, Statistic> m_humidity;
-	std::map<std::string, Statistic> m_windSpeed;
-	std::map<std::string, WindStatistic> m_windDirections;
+	Statistic m_temperature;
+	Statistic m_pressure;
+	Statistic m_humidity;
+	Statistic m_windSpeed;
+	WindStatistic m_windDirections;
 };
 
-class CWeatherDataPro : public CObservable<SWeatherInfo>
+class CWeatherDataPro : public CObservable<SWeatherWindInfo>
 {
 public:
-	CWeatherDataPro(std::string name)
-		:m_name(name)
+	CWeatherDataPro()
 	{}
 
-	std::string GetName() const
-	{
-		return m_name;
-	}
 	// Температура в градусах Цельсия
 	double GetTemperature()const
 	{
@@ -207,19 +206,17 @@ public:
 		MeasurementsChanged();
 	}
 protected:
-	SWeatherInfo GetChangedData()const override
+	SWeatherWindInfo GetChangedData()const override
 	{
-		SWeatherInfo info;
+		SWeatherWindInfo info;
 		info.temperature = GetTemperature();
 		info.humidity = GetHumidity();
 		info.pressure = GetPressure();
 		info.windDirection = GetWindDirection();
 		info.windSpeed = GetWindSpeed();
-		info.name = GetName();
 		return info;
 	}
 private:
-	std::string m_name;
 	double m_temperature = 0.0;
 	double m_humidity = 0.0;
 	double m_pressure = 760.0;
@@ -230,8 +227,7 @@ private:
 class CWeatherData : public CObservable<SWeatherInfo>
 {
 public:
-	CWeatherData(std::string name)
-		:m_name(name)
+	CWeatherData()
 	{}
 
 	// Температура в градусах Цельсия
@@ -248,11 +244,6 @@ public:
 	double GetPressure()const
 	{
 		return m_pressure;
-	}
-
-	std::string GetName() const
-	{
-		return m_name;
 	}
 
 	void MeasurementsChanged()
@@ -275,11 +266,10 @@ protected:
 		info.temperature = GetTemperature();
 		info.humidity = GetHumidity();
 		info.pressure = GetPressure();
-		info.name = GetName();
 		return info;
 	}
+	//Разные структуры
 private:
-	std::string m_name;
 	double m_temperature = 0.0;
 	double m_humidity = 0.0;
 	double m_pressure = 760.0;

@@ -60,7 +60,7 @@ public:
 protected:
 	double GetCondimentCost()const override
 	{
-		return 10 * m_amount;
+		return 10.0 * m_amount;
 	}
 
 	std::string GetCondimentDescription()const override
@@ -177,7 +177,7 @@ private:
 // Тип ликера
 enum class LiquorType
 {
-	Nut,	// Шоколадный
+	Nut,			// Шоколадный
 	Chocolate,		// Кленовый
 };
 

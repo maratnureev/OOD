@@ -110,6 +110,8 @@ private:
 
 	void UpdateWindIndicator(Statistic& prevSpeedData, WindStatistic& prevDirectionData, double windSpeed, double windDirection)
 	{
+		if (windSpeed == 0)
+			return;
 		auto windVectorX = windSpeed * cos(windDirection * M_PI / HALF_CIRCLE);
 		auto windVectorY = windSpeed * sin(windDirection * M_PI / HALF_CIRCLE);
 		if (prevSpeedData.minValue > windSpeed)
@@ -127,7 +129,6 @@ private:
 		prevSpeedData.accValue += windSpeed;
 		++prevSpeedData.countAcc;
 
-		WindVector windMeasurments;
 		prevDirectionData.avgWindVector.windVectorX += windVectorX;
 		prevDirectionData.avgWindVector.windVectorY += windVectorY;
 		double minDirection = atan2(prevDirectionData.minWindVector.windVectorY, prevDirectionData.minWindVector.windVectorX) * HALF_CIRCLE / M_PI;
