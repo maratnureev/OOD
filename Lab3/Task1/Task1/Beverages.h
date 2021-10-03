@@ -32,161 +32,128 @@ public:
 	}
 };
 
+enum class CoffeeType{
+	STANDARD,
+	DOUBLE,
+};
+
 // Капуччино
 class CCappuccino : public CCoffee
 {
 public:
-	CCappuccino()
-		:CCoffee("Cappuccino")
-	{}
+	CCappuccino(CoffeeType type)
+		:m_type(type)
+	{
+		std::string description = m_type == CoffeeType::STANDARD ? "Cappuccino" : "Double cappuccino";
+		CCoffee(description);
+	}
 
 	double GetCost() const override
 	{
-		return 80;
+		return m_type == CoffeeType::STANDARD ? 80 : 120;
 	}
-};
-
-// Двойной капуччино
-class CDoubleCappuccino: public CCoffee
-{
-public:
-	CDoubleCappuccino()
-		:CCoffee("Double cappuccino")
-	{}
-
-	double GetCost() const override
-	{
-		return 120;
-	}
+private:
+	CoffeeType m_type;
 };
 
 // Латте
 class CLatte : public CCoffee
 {
 public:
-	CLatte()
-		:CCoffee("Latte")
-	{}
+	CLatte(CoffeeType type)
+		:m_type(type)
+	{
+		std::string description = m_type == CoffeeType::STANDARD ? "Latte" : "Double latte";
+		CCoffee(description);
+	}
 
 	double GetCost() const override
 	{
-		return 90;
+		return m_type == CoffeeType::STANDARD ? 90 : 130;
 	}
+private:
+	CoffeeType m_type;
 };
 
-// Двойной латте
-class CDoubleLatte : public CCoffee
-{
-public:
-	CDoubleLatte()
-		:CCoffee("Double latte")
-	{}
 
-	double GetCost() const override
-	{
-		return 130;
-	}
+enum class TeaType {
+	HIBISCUS_TEA,
+	BLACK_TEA,
+	GREEN_TEA,
+	PUER_TEA,
 };
 
 // Чай
 class CTea : public CBeverage
 {
 public:
-	CTea(const std::string& description = "Tea")
-		:CBeverage(description)
+	CTea(TeaType type)
+		: CBeverage(GetTeaDescription(type))
 	{}
 
 	double GetCost() const override
 	{
 		return 30;
 	}
+
+	std::string GetTeaDescription(TeaType type)
+	{
+		std::string description;
+		switch (type)
+		{
+		case TeaType::BLACK_TEA:
+			description = "Black tea";
+		case TeaType::GREEN_TEA:
+			description = "Green tea";
+		case TeaType::HIBISCUS_TEA:
+			description = "Hibiscus";
+		case TeaType::PUER_TEA:
+			description = "Puer";
+		}
+	}
 };
 
-// Каркаде
-class CHibiscus : public CTea
-{
-public:
-	CHibiscus()
-		:CTea("Hibiscus")
-	{}
-};
-
-// Черный чай
-class CBlackTea : public CTea
-{
-public:
-	CBlackTea()
-		:CTea("Black tea")
-	{}
-};
-
-// Зеленый чай
-class CGreenTea : public CTea
-{
-public:
-	CGreenTea()
-		:CTea("Green tea")
-	{}
-};
-
-// Пуэр
-class CPuer : public CTea
-{
-public:
-	CPuer()
-		:CTea("Puer")
-	{}
+enum class MilkshakePortionType{
+	SMALL,
+	STANDARD,
+	BIG,
 };
 
 // Молочный коктейль
 class CMilkshake : public CBeverage
 {
 public:
-	CMilkshake(const std::string& description = "Milkshake")
-		:CBeverage(description)
+	CMilkshake(MilkshakePortionType type)
+		:CBeverage(GetMilkshakeDescription(type))
+		, m_type(type)
 	{}
 
 	double GetCost() const override
 	{
-		return 80;
+		switch (m_type)
+		{
+		case MilkshakePortionType::SMALL:
+			return 50;
+		case MilkshakePortionType::STANDARD:
+			return 60;
+		case MilkshakePortionType::BIG:
+			return 80;
+		}
 	}
-};
 
-class CSmallMilkshake : public CMilkshake
-{
-public:
-	CSmallMilkshake()
-		:CMilkshake("Small milkshake")
-	{}
-
-	double GetCost() const override
+	std::string GetMilkshakeDescription(MilkshakePortionType type)
 	{
-		return 50;
+		std::string description;
+		switch (type)
+		{
+		case MilkshakePortionType::SMALL:
+			description = "Small milkshake";
+		case MilkshakePortionType::STANDARD:
+			description = "Medium milkshake";
+		case MilkshakePortionType::BIG:
+			description = "Big milkshake";
+		}
 	}
-};
-
-class CMediumMilkshake : public CMilkshake
-{
-public:
-	CMediumMilkshake()
-		:CMilkshake("Medium milkshake")
-	{}
-
-	double GetCost() const override
-	{
-		return 60;
-	}
-};
-
-class CBigMilkshake : public CMilkshake
-{
-public:
-	CBigMilkshake()
-		:CMilkshake("Big milkshake")
-	{}
-
-	double GetCost() const override
-	{
-		return 80;
-	}
+private:
+	MilkshakePortionType m_type;
 };
