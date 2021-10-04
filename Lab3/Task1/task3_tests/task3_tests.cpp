@@ -194,23 +194,23 @@ SCENARIO("Compress and decompress data")
 void EncryptMemory(IInputDataStreamPtr input, vector<uint8_t>& v)
 {
 	IOutputDataStreamPtr outputStream = make_unique<CMemoryOutputStream>(v);
-	COutputEncryptStreamDecorator compressed(move(outputStream), 100);
+	COutputEncryptStreamDecorator encrypt(move(outputStream), 100);
 
 	while (!input->IsEOF())
 	{
 		auto byte = input->ReadByte();
-		compressed.WriteByte(byte);
+		encrypt.WriteByte(byte);
 	}
 }
 
 void DecryptMemory(IOutputDataStreamPtr finalStream, vector<uint8_t>& v)
 {
 	IInputDataStreamPtr inputStream = make_unique<CMemoryInputStream>(v);
-	CInputDecryptStreamDecorator decompressed(move(inputStream), 100);
+	CInputDecryptStreamDecorator decrypt(move(inputStream), 100);
 
-	while (!decompressed.IsEOF())
+	while (!decrypt.IsEOF())
 	{
-		auto byte = decompressed.ReadByte();
+		auto byte = decrypt.ReadByte();
 		finalStream->WriteByte(byte);
 	}
 }
@@ -219,13 +219,26 @@ SCENARIO("Encrypt and decrypt data")
 {
 	string startValue = "5555446667878";
 	vector<uint8_t> data(startValue.begin(), startValue.end());
-	vector<uint8_t> decompressed;
-	vector<uint8_t> compressed;
-	IOutputDataStreamPtr finalstream = make_unique<CMemoryOutputStream>(decompressed);
+	vector<uint8_t> decrypt;
+	vector<uint8_t> encrypt;
+	IOutputDataStreamPtr finalstream = make_unique<CMemoryOutputStream>(decrypt);
 	IInputDataStreamPtr input = make_unique<CMemoryInputStream>(data);
 
-	EncryptMemory(move(input), compressed);
-	DecryptMemory(move(finalstream), compressed);
+	EncryptMemory(move(input), encrypt);
+	DecryptMemory(move(finalstream), encrypt);
 
-	REQUIRE(decompressed == data);
+	REQUIRE(decrypt == data);
+}
+
+SCENARIO("Read from empty file")
+{
+	CFileInputStream emptyStream("emptyInput.txt");
+	REQUIRE_THROWS(emptyStream.ReadByte());
+}
+
+SCENARIO("Read from empty memory")
+{
+	vector<uint8_t> v;
+	CMemoryInputStream emptyStream(v);
+	REQUIRE_THROWS(emptyStream.ReadByte());
 }

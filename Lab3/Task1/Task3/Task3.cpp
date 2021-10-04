@@ -40,8 +40,10 @@ void ShowUsage()
     cout << "--decompress decompress file" << endl;
 }
 
-StreamStorage BuildInputAndOutputStreams(int argc, char* argv[])
+optional<StreamStorage> BuildInputAndOutputStreams(int argc, char* argv[])
 {
+    if (argc < 3)
+        return nullopt;
     string inputFileName = argv[argc - 2];
     string outputFileName = argv[argc - 1];
     IOutputDataStreamPtr outputStream = make_unique<CFileOutputStream>(outputFileName);
@@ -68,6 +70,10 @@ StreamStorage BuildInputAndOutputStreams(int argc, char* argv[])
             int encryptKey = atoi(argv[i++]);
             inputStream = make_unique<CInputDecryptStreamDecorator>(move(inputStream), encryptKey);
         }
+        else
+        {
+            return nullopt;
+        }
     }
     StreamStorage storage;
     storage.inputStream = move(inputStream);
@@ -78,15 +84,15 @@ StreamStorage BuildInputAndOutputStreams(int argc, char* argv[])
 int main(int argc, char* argv[])
 {
     auto streams = BuildInputAndOutputStreams(argc, argv);
-    if (argc < 3)
+    if (!streams)
     {
         ShowUsage();
         return 1;
     }
-    while (!streams.inputStream->IsEOF())
+    while (!streams->inputStream->IsEOF())
     {
-        auto data = streams.inputStream->ReadByte();
-        streams.outputStream->WriteByte(data);
+        auto data = streams->inputStream->ReadByte();
+        streams->outputStream->WriteByte(data);
     }
 
 	return 0;

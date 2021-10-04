@@ -10,9 +10,10 @@ public:
 	COutputEncryptStreamDecorator(IOutputDataStreamPtr&& outputStream, int encryptKey)
 		: m_outputStream(move(outputStream))
 	{
-		for (uint8_t i = 0; i < 255; i++)
+		int i = 0;
+		while (i < 256)
 		{
-			m_encryptMap.push_back(i);
+			m_encryptMap.push_back(i++);
 		}
 		std::shuffle(m_encryptMap.begin(), m_encryptMap.end(), std::default_random_engine(encryptKey));
 	}

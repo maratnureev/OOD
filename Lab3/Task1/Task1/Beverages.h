@@ -96,7 +96,7 @@ public:
 		return 30;
 	}
 
-	std::string GetTeaDescription(TeaType type)
+	std::string GetTeaDescription(TeaType type) const
 	{
 		std::string description;
 		switch (type)
@@ -141,7 +141,7 @@ public:
 		}
 	}
 
-	std::string GetMilkshakeDescription(MilkshakePortionType type)
+	std::string GetMilkshakeDescription(MilkshakePortionType type) const 
 	{
 		std::string description;
 		switch (type)

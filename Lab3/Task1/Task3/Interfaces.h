@@ -40,8 +40,8 @@ public:
 };
 
 struct CompressedByte {
-	uint8_t count;
-	uint8_t byte;
+	int count = 0;
+	uint8_t byte = 0;
 };
 
 typedef std::unique_ptr<IInputDataStream> IInputDataStreamPtr;

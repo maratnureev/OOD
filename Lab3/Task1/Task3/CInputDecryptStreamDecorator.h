@@ -11,15 +11,16 @@ public:
 		: m_inputStream(move(inputStream))
 	{
 		std::vector<uint8_t> encryptMap;
-		for (uint8_t i = 0; i < 255; i++)
+		int i = 0;
+		while (i < 256)
 		{
-			encryptMap.push_back(i);
+			encryptMap.push_back(i++);
 		}
 		std::shuffle(encryptMap.begin(), encryptMap.end(), std::default_random_engine(encryptKey));
-		int i = 0;
+		int index = 0;
 		for (auto value : encryptMap)
 		{
-			m_encryptMap[value] = i++;
+			m_encryptMap[value] = index++;
 		}
 	}
 
