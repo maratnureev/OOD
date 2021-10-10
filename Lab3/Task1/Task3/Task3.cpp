@@ -89,10 +89,18 @@ int main(int argc, char* argv[])
         ShowUsage();
         return 1;
     }
+    int counter = 0;
     while (!streams->inputStream->IsEOF())
     {
-        auto data = streams->inputStream->ReadByte();
-        streams->outputStream->WriteByte(data);
+        try 
+        {
+            auto data = streams->inputStream->ReadByte();
+            streams->outputStream->WriteByte(data);
+        }
+        catch (std::ios_base::failure)
+        {
+            return 0;
+        }
     }
 
 	return 0;

@@ -1,6 +1,6 @@
 #include "CInputDecryptStreamDecorator.h"
 
-bool CInputDecryptStreamDecorator::IsEOF()
+bool CInputDecryptStreamDecorator::IsEOF() const
 {
 	return m_inputStream->IsEOF();
 }

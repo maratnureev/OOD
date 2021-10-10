@@ -1,6 +1,6 @@
 #include "CInputDecompressStreamDecorator.h"
 
-bool CInputDecompressStreamDecorator::IsEOF()
+bool CInputDecompressStreamDecorator::IsEOF() const
 {
 	return m_inputStream->IsEOF();
 }

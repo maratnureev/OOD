@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <cstdint>
+#include <optional>
 
 using namespace std;
 
@@ -25,7 +26,7 @@ class IInputDataStream
 public:
 	// Возвращает признак достижения конца данных потока
 	// Выбрасывает исключение std::ios_base::failure в случае ошибки
-	virtual bool IsEOF() = 0;
+	virtual bool IsEOF() const = 0;
 
 	// Считывает байт из потока. 
 	// Выбрасывает исключение std::ios_base::failure в случае ошибки

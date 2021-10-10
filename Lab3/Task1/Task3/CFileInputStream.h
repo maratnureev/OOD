@@ -8,16 +8,13 @@ public:
 	CFileInputStream(std::string const& fileName)
 	{
 		m_file.open(fileName, ios::in | ios::binary);
-		m_file.seekg(0, m_file.end);
-		m_fileSize = m_file.tellg();
-		m_file.seekg(0, m_file.beg);
 	}
 	~CFileInputStream()
 	{
 		m_file.close();
 	}
 
-	bool IsEOF() override;
+	bool IsEOF() const override;
 
 	// Считывает байт из потока. 
 	// Выбрасывает исключение std::ios_base::failure в случае ошибки
@@ -29,6 +26,5 @@ public:
 	std::streamsize ReadBlock(void* dstBuffer, std::streamsize size) override;
 private:
 	std::fstream m_file;
-	std::streampos m_fileSize = 0;
 };
 

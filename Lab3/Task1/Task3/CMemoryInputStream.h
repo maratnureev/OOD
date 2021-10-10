@@ -12,7 +12,7 @@ public:
 	}
 	// Возвращает признак достижения конца данных потока
 	// Выбрасывает исключение std::ios_base::failure в случае ошибки
-	bool IsEOF() override;
+	bool IsEOF() const override;
 
 	// Считывает байт из потока. 
 	// Выбрасывает исключение std::ios_base::failure в случае ошибки

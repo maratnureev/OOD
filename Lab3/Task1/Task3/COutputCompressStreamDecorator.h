@@ -12,8 +12,8 @@ public:
 	}
 	~COutputCompressStreamDecorator()
 	{
-		WriteByte(m_currentByte.byte);
-		WriteByte(m_currentByte.count);
+		m_outputStream->WriteByte(m_currentByte.byte);
+		m_outputStream->WriteByte(m_currentByte.count);
 	}
 
 	// Записывает в поток данных байт

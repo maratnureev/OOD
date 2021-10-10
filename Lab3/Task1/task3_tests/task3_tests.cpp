@@ -217,7 +217,7 @@ void DecryptMemory(IOutputDataStreamPtr finalStream, vector<uint8_t>& v)
 
 SCENARIO("Encrypt and decrypt data")
 {
-	string startValue = "5555446667878";
+	string startValue = "555544666787888" + 255;
 	vector<uint8_t> data(startValue.begin(), startValue.end());
 	vector<uint8_t> decrypt;
 	vector<uint8_t> encrypt;

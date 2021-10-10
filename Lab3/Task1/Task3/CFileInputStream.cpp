@@ -1,16 +1,15 @@
 #include "CFileInputStream.h"
 
-bool CFileInputStream::IsEOF()
+bool CFileInputStream::IsEOF() const
 {
-	return m_fileSize == m_file.tellg();
+	return m_file.eof();
 }
 
 uint8_t CFileInputStream::ReadByte()
 {
-	if (IsEOF())
-		throw std::ios_base::failure("End of the file");
 	char symbol;
-	m_file.read(&symbol, 1);
+	if (!m_file.read(&symbol, 1))
+		throw std::ios_base::failure("End of the file");
 	return static_cast<uint8_t>(symbol);
 }
 

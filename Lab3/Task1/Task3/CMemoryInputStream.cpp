@@ -1,6 +1,6 @@
 #include "CMemoryInputStream.h"
 
-bool CMemoryInputStream::IsEOF()
+bool CMemoryInputStream::IsEOF() const
 {
 	return m_currentIndex >= m_data.size();
 }

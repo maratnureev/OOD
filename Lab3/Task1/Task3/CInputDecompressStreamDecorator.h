@@ -11,7 +11,7 @@ public:
 		m_currentByte.byte = 0;
 	}
 
-	bool IsEOF() override;
+	bool IsEOF() const override;
 
 	// Считывает байт из потока. 
 	// Выбрасывает исключение std::ios_base::failure в случае ошибки
