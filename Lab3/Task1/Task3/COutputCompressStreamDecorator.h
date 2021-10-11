@@ -4,6 +4,7 @@
 class COutputCompressStreamDecorator : public IOutputDataStream
 {
 public:
+	// Написать метод для саписи последнего символа
 	COutputCompressStreamDecorator(IOutputDataStreamPtr&& outputStream)
 		: m_outputStream(move(outputStream))
 	{

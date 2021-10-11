@@ -67,6 +67,7 @@ SCENARIO("Read 10 bytes from memory")
 	}
 	CMemoryInputStream memoryInput(data);
 	uint8_t* dataOutput = new uint8_t[10];
+	//Провеирть возврю значен.
 	memoryInput.ReadBlock(dataOutput, 10);
 	REQUIRE(data[0] == dataOutput[0]);
 	REQUIRE(data[1] == dataOutput[1]);
@@ -135,6 +136,7 @@ SCENARIO("Read 10 bytes from file")
 	REQUIRE(data[9] == dataOutput[9]);
 }
 
+//Название теста
 SCENARIO("Read 12 bytes from file")
 {
 	std::string fileName = "input.txt";
@@ -242,3 +244,4 @@ SCENARIO("Read from empty memory")
 	CMemoryInputStream emptyStream(v);
 	REQUIRE_THROWS(emptyStream.ReadByte());
 }
+

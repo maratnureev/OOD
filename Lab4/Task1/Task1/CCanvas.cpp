@@ -45,5 +45,6 @@ std::string CCanvas::GetColorName(Color color) const
     case Color::BLACK:
         return "black";
     }
+    throw std::invalid_argument("Invalid color");
 }
 

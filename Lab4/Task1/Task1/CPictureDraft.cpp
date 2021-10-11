@@ -2,7 +2,7 @@
 
 int CPictureDraft::GetShapeCount() const
 {
-    return m_shapes.size();
+    return (int)m_shapes.size();
 }
 
 const std::unique_ptr<CShape>& CPictureDraft::GetShape(int index) const

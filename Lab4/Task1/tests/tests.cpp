@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void CheckEllipse(CEllipse& ellipse, Color color, Point center, double horizontalR, double verticalRadius)
+void TestEllipse(CEllipse& ellipse, Color color, Point center, double horizontalR, double verticalRadius)
 {
 	REQUIRE(ellipse.GetHorizontalRadius() == horizontalR);
 	REQUIRE(ellipse.GetVerticalRadius() == verticalRadius);
@@ -24,7 +24,7 @@ void CheckEllipse(CEllipse& ellipse, Color color, Point center, double horizonta
 	REQUIRE(ellipse.GetColor() == color);
 }
 
-void CheckRectangle(CRectangle& rect, Color color, Point leftTop, Point bottomRight)
+void TestRectangle(CRectangle& rect, Color color, Point leftTop, Point bottomRight)
 {
 	REQUIRE(rect.GetLeftTop().x == leftTop.x);
 	REQUIRE(rect.GetLeftTop().y == leftTop.y);
@@ -35,7 +35,7 @@ void CheckRectangle(CRectangle& rect, Color color, Point leftTop, Point bottomRi
 	REQUIRE(rect.GetColor() == color);
 }
 
-void CheckTriangle(CTriangle& triangle, Color color, Point v1, Point v2, Point v3)
+void TestTriangle(CTriangle& triangle, Color color, Point v1, Point v2, Point v3)
 {
 	REQUIRE(triangle.GetFirstVertex().x == v1.x);
 	REQUIRE(triangle.GetFirstVertex().y == v1.y);
@@ -49,7 +49,7 @@ void CheckTriangle(CTriangle& triangle, Color color, Point v1, Point v2, Point v
 	REQUIRE(triangle.GetColor() == color);
 }
 
-void CheckPolygon(CRegularPolygon& polygon, Color color, Point center, double radius, int vertCount)
+void TestPolygon(CRegularPolygon& polygon, Color color, Point center, double radius, int vertCount)
 {
 	REQUIRE(polygon.GetVertexCount() == vertCount);
 
@@ -61,7 +61,7 @@ void CheckPolygon(CRegularPolygon& polygon, Color color, Point center, double ra
 	REQUIRE(polygon.GetColor() == color);
 }
 
-void PrintToCanvas(ostream& out, CPictureDraft& draft)
+void DrawDraft(ostream& out, CPictureDraft& draft)
 {
 	CCanvas canvas(out);
 	CPainter painter;
@@ -69,67 +69,29 @@ void PrintToCanvas(ostream& out, CPictureDraft& draft)
 }
 
 
-SCENARIO("test Shapes")
+SCENARIO("test elipse creation")
 {
-	CEllipse ellipse(
-		Color::BLUE,
-		{ 100, 200 },
-		150,
-		200
-	);
-	CheckEllipse(
-		ellipse,
-		Color::BLUE,
-		{ 100 , 200 },
-		150,
-		200
-	);
-
-
-	CTriangle triangle(
-		Color::BLUE,
-		{ 100, 100 },
-		{ 200, 200 },
-		{ 500, 500 }
-	);
-	CheckTriangle(
-		triangle,
-		Color::BLUE,
-		{ 100, 100 },
-		{ 200, 200 },
-		{ 500, 500 }
-	);
-
-
-	CRectangle rect(
-		Color::PINK,
-		{ 100, 100 },
-		{ 500, 500 }
-	);
-	CheckRectangle(
-		rect,
-		Color::PINK,
-		{ 100, 100 },
-		{ 500, 500 }
-	);
-
-
-	CRegularPolygon regular(
-		Color::GREEN,
-		{ 300, 300 },
-		50,
-		5
-	);
-	CheckPolygon(
-		regular,
-		Color::GREEN,
-		{ 300, 300 },
-		50,
-		5
-	);
+	CEllipse ellipse(Color::BLUE, { 100, 200 }, 150, 200);
+	TestEllipse(ellipse, Color::BLUE, { 100  , 200 }, 150, 200);
 }
 
-SCENARIO("Designer and PictuREDraft tests And when Painter And Canvas")
+SCENARIO("test triangle creation")
+{
+	CTriangle triangle(Color::BLUE, { 100, 100 }, { 200, 200 }, { 500, 500 });
+	TestTriangle(triangle, Color::BLUE, { 100, 100 }, { 200, 200 }, { 500, 500 });
+}
+SCENARIO("test rectangle creation")
+{
+	CRectangle rect(Color::PINK, { 100, 100 }, { 500, 500 });
+	TestRectangle(rect, Color::PINK, { 100, 100 }, { 500, 500 });
+}
+SCENARIO("test polygon creation")
+{
+	CRegularPolygon regular(Color::GREEN, { 300, 300 }, 50, 5);
+	TestPolygon(regular, Color::GREEN, { 300, 300 }, 50, 5);
+}
+
+SCENARIO("Test painter")
 {
 	IShapeFactoryPtr shapeFactory = std::make_unique<CShapeFactory>();
 	CDesigner designer(move(shapeFactory));
@@ -142,45 +104,8 @@ SCENARIO("Designer and PictuREDraft tests And when Painter And Canvas")
 		"polygon black 6 15 105\n"
 		"polygon black 100 100 60 2\n";
 	istringstream in(input);
-
 	CPictureDraft draft = designer.CreateDraft(in);
-
 	REQUIRE(draft.GetShapeCount() == 4);
-	CRectangle* rect = dynamic_cast<CRectangle*>(draft.GetShape(0).get());
-	REQUIRE(rect != nullptr);
-	CheckRectangle(
-		*rect,
-		Color::RED,
-		{ 100, 100 },
-		{ 500, 500 }
-	);
-	CTriangle* triangle = dynamic_cast<CTriangle*>(draft.GetShape(1).get());
-	REQUIRE(triangle != nullptr);
-	CheckTriangle(
-		*triangle,
-		Color::BLUE,
-		{ 100, 100 },
-		{ 300, 300 },
-		{ 500, 500 }
-	);
-	CEllipse* ellipse = dynamic_cast<CEllipse*>(draft.GetShape(2).get());
-	REQUIRE(ellipse != nullptr);
-	CheckEllipse(
-		*ellipse,
-		Color::YELLOW,
-		{ 100, 100 },
-		50,
-		80
-	);
-	CRegularPolygon* polygon = dynamic_cast<CRegularPolygon*>(draft.GetShape(3).get());
-	REQUIRE(polygon != nullptr);
-	CheckPolygon(
-		*polygon,
-		Color::BLACK,
-		{ 100, 100 },
-		50,
-		6
-	);
 
 	string result = "<svg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080' viewPort='0 0 1920 1080'>\n"
 		"<line x1 = '100' y1 = '100' x2 = '500' y2 = '100' stroke = 'red' stroke-width = '5'/>\n"
@@ -200,7 +125,79 @@ SCENARIO("Designer and PictuREDraft tests And when Painter And Canvas")
 		"</svg>\n";
 	string out;
 	ostringstream outStrm(out);
-	PrintToCanvas(outStrm, draft);
+	DrawDraft(outStrm, draft);
 
 	REQUIRE(outStrm.str() == result);
+}
+
+SCENARIO("Test rectangle creation with factory")
+{
+	IShapeFactoryPtr shapeFactory = std::make_unique<CShapeFactory>();
+	CDesigner designer(move(shapeFactory));
+	string input = "rectangle red 100 100 500 500\n";
+	istringstream in(input);
+
+	CPictureDraft draft = designer.CreateDraft(in);
+	REQUIRE(draft.GetShapeCount() == 1);
+	CRectangle* rect = dynamic_cast<CRectangle*>(draft.GetShape(0).get());
+	TestRectangle(*rect, Color::RED, { 100, 100 }, { 500, 500 });
+}
+
+SCENARIO("Test triangle creation with factory")
+{
+	IShapeFactoryPtr shapeFactory = std::make_unique<CShapeFactory>();
+	CDesigner designer(move(shapeFactory));
+	string input = "triangle blue 100 100 300 300 500 500\n";
+	istringstream in(input);
+
+	CPictureDraft draft = designer.CreateDraft(in);
+	REQUIRE(draft.GetShapeCount() == 1);
+	CTriangle* triangle = dynamic_cast<CTriangle*>(draft.GetShape(0).get());
+	TestTriangle(*triangle, Color::BLUE, { 100, 100 }, { 300, 300 }, { 500, 500 });
+}
+
+SCENARIO("Test polygon creation with factory")
+{
+	IShapeFactoryPtr shapeFactory = std::make_unique<CShapeFactory>();
+	CDesigner designer(move(shapeFactory));
+	string input = "ellipse yellow 100 100 50 80\n";
+	istringstream in(input);
+
+	CPictureDraft draft = designer.CreateDraft(in);
+	REQUIRE(draft.GetShapeCount() == 1); 
+	CRegularPolygon* polygon = dynamic_cast<CRegularPolygon*>(draft.GetShape(0).get());
+	TestPolygon(*polygon, Color::BLACK, { 100, 100 }, 50, 6);
+}
+
+SCENARIO("Test invalid shape name creation with factory")
+{
+	IShapeFactoryPtr shapeFactory = std::make_unique<CShapeFactory>();
+	CDesigner designer(move(shapeFactory));
+	string input = "circle yellow 100 100 50 80\n";
+	istringstream in(input);
+
+	CPictureDraft draft = designer.CreateDraft(in);
+	REQUIRE(draft.GetShapeCount() == 0);
+}
+
+SCENARIO("Test polygon with 2 vertexes name creation with factory")
+{
+	IShapeFactoryPtr shapeFactory = std::make_unique<CShapeFactory>();
+	CDesigner designer(move(shapeFactory));
+	string input = "polygon black 100 100 60 2\n";
+	istringstream in(input);
+
+	CPictureDraft draft = designer.CreateDraft(in);
+	REQUIRE(draft.GetShapeCount() == 0);
+}
+
+SCENARIO("Test polygon with invalid parameters number creation with factory")
+{
+	IShapeFactoryPtr shapeFactory = std::make_unique<CShapeFactory>();
+	CDesigner designer(move(shapeFactory));
+	string input = "polygon black 100 100 60\n";
+	istringstream in(input);
+
+	CPictureDraft draft = designer.CreateDraft(in);
+	REQUIRE(draft.GetShapeCount() == 0);
 }

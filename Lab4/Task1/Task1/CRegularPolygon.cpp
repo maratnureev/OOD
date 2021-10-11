@@ -16,13 +16,9 @@ void CRegularPolygon::Draw(ICanvas& canvas) const
         point.y = m_center.y + m_radius * cos(centerAngle * i);
 
         if (!isFirst)
-        {
             canvas.DrawLine(lastPoint, point);
-        }
         else
-        {
             firstPoint = point;
-        }
         isFirst = false;
         lastPoint = point;
     }

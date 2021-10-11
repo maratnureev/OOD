@@ -6,6 +6,7 @@
 class CMemoryInputStream : public IInputDataStream
 {
 public:
+	// Вектор по ссылке
 	CMemoryInputStream(std::vector<uint8_t> data)
 		:m_data(data)
 	{
