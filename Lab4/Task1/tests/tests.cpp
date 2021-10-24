@@ -160,13 +160,26 @@ SCENARIO("Test polygon creation with factory")
 {
 	IShapeFactoryPtr shapeFactory = std::make_unique<CShapeFactory>();
 	CDesigner designer(move(shapeFactory));
+	string input = "polygon yellow 100 100 50 6\n";
+	istringstream in(input);
+
+	CPictureDraft draft = designer.CreateDraft(in);
+	REQUIRE(draft.GetShapeCount() == 1);
+	CRegularPolygon* polygon = dynamic_cast<CRegularPolygon*>(draft.GetShape(0).get());
+	TestPolygon(*polygon, Color::YELLOW, { 100, 100 }, 50, 6);
+}
+
+SCENARIO("Test ellipse creation with factory")
+{
+	IShapeFactoryPtr shapeFactory = std::make_unique<CShapeFactory>();
+	CDesigner designer(move(shapeFactory));
 	string input = "ellipse yellow 100 100 50 80\n";
 	istringstream in(input);
 
 	CPictureDraft draft = designer.CreateDraft(in);
 	REQUIRE(draft.GetShapeCount() == 1); 
-	CRegularPolygon* polygon = dynamic_cast<CRegularPolygon*>(draft.GetShape(0).get());
-	TestPolygon(*polygon, Color::BLACK, { 100, 100 }, 50, 6);
+	CEllipse* polygon = dynamic_cast<CEllipse*>(draft.GetShape(0).get());
+	TestEllipse(*polygon, Color::YELLOW, { 100, 100 }, 50, 80);
 }
 
 SCENARIO("Test invalid shape name creation with factory")

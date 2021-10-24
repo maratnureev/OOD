@@ -222,93 +222,74 @@ SCENARIO("test commands delete item")
 	IsImageValid(document, 1, "images//image0.jpg", 100, 200);
 }
 
-SCENARIO("test history")
+
+SCENARIO("Test history undo/redo boundaries")
 {
 	CHistory history;
+	unique_ptr<ICommand> mockCommand1 = make_unique<CMockCommand>();
+	unique_ptr<ICommand> mockCommand2 = make_unique<CMockCommand>();
+	history.AddAndExecuteCommand(move(mockCommand1));
+	history.AddAndExecuteCommand(move(mockCommand2));
+	REQUIRE(history.CanUndo());
+	REQUIRE(!history.CanRedo());
+	history.Undo();
+	REQUIRE(history.CanUndo());
+	REQUIRE(history.CanRedo());
+	history.Undo();
+	REQUIRE(!history.CanUndo());
+	REQUIRE(history.CanRedo());
+	history.Redo();
+	REQUIRE(history.CanUndo());
+	REQUIRE(history.CanRedo());
+	history.Redo();
+	REQUIRE(history.CanUndo());
+	REQUIRE(!history.CanRedo());
+}
 
-	WHEN("Check undo/redo boundaries")
+SCENARIO("test erase history by adding new command")
+{
+	CHistory history;
+	unique_ptr<ICommand> mockCommand1 = make_unique<CMockCommand>();
+	unique_ptr<ICommand> mockCommand2 = make_unique<CMockCommand>();
+
+	history.AddAndExecuteCommand(move(mockCommand1));
+	history.AddAndExecuteCommand(move(mockCommand2));
+
+	history.Undo();
+	history.Undo();
+	REQUIRE(!history.CanUndo());
+	REQUIRE(history.CanRedo());
+	unique_ptr<ICommand> mockCommand3 = make_unique<CMockCommand>();
+	history.AddAndExecuteCommand(move(mockCommand3));
+	REQUIRE(history.CanUndo());
+	REQUIRE(!history.CanRedo());
+	history.Undo();
+	REQUIRE(!history.CanUndo());
+	REQUIRE(history.CanRedo());
+}
+
+SCENARIO("Test history maximum")
+{
+	CHistory history;
+	for (int i = 0; i < 11; i++)
 	{
-		unique_ptr<ICommand> mockCommand1 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand2 = make_unique<CMockCommand>();
-		history.AddAndExecuteCommand(move(mockCommand1));
-		history.AddAndExecuteCommand(move(mockCommand2));
-		REQUIRE(history.CanUndo());
-		REQUIRE(!history.CanRedo());
-		history.Undo();
-		REQUIRE(history.CanUndo());
-		REQUIRE(history.CanRedo());
-		history.Undo();
-		REQUIRE(!history.CanUndo());
-		REQUIRE(history.CanRedo());
-		history.Redo();
-		REQUIRE(history.CanUndo());
-		REQUIRE(history.CanRedo());
-		history.Redo();
-		REQUIRE(history.CanUndo());
-		REQUIRE(!history.CanRedo());
+		unique_ptr<ICommand> mockCommand = make_unique<CMockCommand>();
+		history.AddAndExecuteCommand(move(mockCommand));
 	}
 
-	WHEN("test erase history by adding new command")
-	{
-		unique_ptr<ICommand> mockCommand1 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand2 = make_unique<CMockCommand>();
+	history.Undo();
+	history.Undo();
+	history.Undo();
+	history.Undo();
+	history.Undo();
+	history.Undo();
+	history.Undo();
+	history.Undo();
+	history.Undo();
+	history.Undo();
 
-		history.AddAndExecuteCommand(move(mockCommand1));
-		history.AddAndExecuteCommand(move(mockCommand2));
-
-		history.Undo();
-		history.Undo();
-		REQUIRE(!history.CanUndo());
-		REQUIRE(history.CanRedo());
-		unique_ptr<ICommand> mockCommand3 = make_unique<CMockCommand>();
-		history.AddAndExecuteCommand(move(mockCommand3));
-		REQUIRE(history.CanUndo());
-		REQUIRE(!history.CanRedo());
-		history.Undo();
-		REQUIRE(!history.CanUndo());
-		REQUIRE(history.CanRedo());
-	}
-
-	WHEN("do 11 command then undo 10")
-	{
-		unique_ptr<ICommand> mockCommand1 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand2 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand3 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand4 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand5 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand6 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand7 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand8 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand9 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand10 = make_unique<CMockCommand>();
-		unique_ptr<ICommand> mockCommand11 = make_unique<CMockCommand>();
-
-		history.AddAndExecuteCommand(move(mockCommand1));
-		history.AddAndExecuteCommand(move(mockCommand2));
-		history.AddAndExecuteCommand(move(mockCommand3));
-		history.AddAndExecuteCommand(move(mockCommand4));
-		history.AddAndExecuteCommand(move(mockCommand5));
-		history.AddAndExecuteCommand(move(mockCommand6));
-		history.AddAndExecuteCommand(move(mockCommand7));
-		history.AddAndExecuteCommand(move(mockCommand8));
-		history.AddAndExecuteCommand(move(mockCommand9));
-		history.AddAndExecuteCommand(move(mockCommand10));
-		history.AddAndExecuteCommand(move(mockCommand11));
-
-		history.Undo();
-		history.Undo();
-		history.Undo();
-		history.Undo();
-		history.Undo();
-		history.Undo();
-		history.Undo();
-		history.Undo();
-		history.Undo();
-		history.Undo();
-
-		REQUIRE(!history.CanUndo());
-		REQUIRE(history.CanRedo());
-	}
+	REQUIRE(!history.CanUndo());
+	REQUIRE(history.CanRedo());
 }
 
 SCENARIO("Handle empty string")

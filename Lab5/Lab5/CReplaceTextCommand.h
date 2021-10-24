@@ -18,7 +18,7 @@ protected:
 	{
 		auto item = m_document.GetItem(*m_position).GetParagraph();
 		if (item == nullptr)
-			throw invalid_argument("Position is out of bounce");
+			throw invalid_argument("No paragraph with given position");
 		m_oldText = item->GetText();
 		item->SetText(m_newText);
 	}
@@ -27,7 +27,7 @@ protected:
 	{
 		auto item = m_document.GetItem(*m_position).GetParagraph();
 		if (item == nullptr)
-			throw invalid_argument("Position is out of bounce");
+			throw invalid_argument("No paragraph with given position");
 		item->SetText(m_oldText);
 	}
 

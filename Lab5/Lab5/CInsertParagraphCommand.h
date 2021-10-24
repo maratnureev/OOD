@@ -17,7 +17,6 @@ protected:
 	{
 		m_document.InsertParagraph(m_text, m_position);
 	}
-
 	void DoUnexecute() override
 	{
 		auto position = m_position == nullopt ? m_document.GetItemsCount() - 1 : *m_position;

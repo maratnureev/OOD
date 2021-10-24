@@ -91,8 +91,8 @@ namespace
 		void InsertImage(istream& in)
 		{
 			string position;
-			int width;
-			int height;
+			int width = 0;
+			int height = 0;
 			Path path;
 			in >> position >> width >> height >> path;
 			optional<size_t> numberPosition = nullopt;

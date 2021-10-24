@@ -17,7 +17,15 @@ protected:
 
 	void DoExecute() override
 	{
-		m_document.InsertImage(m_path, m_width, m_height, m_position);
+		try
+		{
+			m_document.InsertImage(m_path, m_width, m_height, m_position);
+		}
+		// лоавить исключение копирования
+		catch (exception e)
+		{
+			throw invalid_argument("File does not exists: " + m_path.string());
+		}
 	}
 
 	void DoUnexecute() override
