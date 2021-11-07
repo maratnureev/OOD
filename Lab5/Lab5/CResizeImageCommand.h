@@ -38,7 +38,7 @@ private:
 	optional<size_t> m_position;
 	int m_newWidth;
 	int m_newHeight;
-	int m_oldWidth;
-	int m_oldHeight;
+	int m_oldWidth = 0;
+	int m_oldHeight = 0;
 };
 

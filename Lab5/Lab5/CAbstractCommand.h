@@ -7,7 +7,6 @@ class CAbstractCommand :
 public:
 	void Execute() final;
 	void Unexecute() final;
-	void Destroy();
 
 protected:
 	virtual void DoExecute() = 0;

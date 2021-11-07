@@ -17,7 +17,3 @@ void CAbstractCommand::Unexecute()
 		m_executed = false;
 	}
 }
-
-void CAbstractCommand::Destroy()
-{
-}

@@ -37,10 +37,6 @@ void CHistory::AddAndExecuteCommand(std::unique_ptr<ICommand>&& command)
 	if (m_nextCommandIndex < m_commands.size()) // Ќе происходит расширени€ истории команд
 	{
 		command->Execute();	// может бросить исключение
-		for (size_t i = m_nextCommandIndex; i < m_commands.size(); i++)
-		{
-			m_commands[i]->Destroy();
-		}
 		++m_nextCommandIndex;				
 		m_commands.resize(m_nextCommandIndex);	// исключение выброшено не будет, т.к. размер <= текущему
 		m_commands.back() = move(command);
@@ -59,7 +55,6 @@ void CHistory::AddAndExecuteCommand(std::unique_ptr<ICommand>&& command)
 			++m_nextCommandIndex; // теперь можно обновить индекс следующей команды
 			if (m_nextCommandIndex > MAX_HISTORY_SIZE)
 			{
-				m_commands[0]->Destroy();
 				m_commands.erase(m_commands.begin());
 				m_nextCommandIndex = MAX_HISTORY_SIZE;
 			}

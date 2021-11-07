@@ -31,7 +31,14 @@ shared_ptr<IImage> CHtmlDocument::InsertImage(const Path& path, int width, int h
     Path newImagePath = IMAGE_FOLDER / imageName;
     newImagePath.replace_extension(path.extension());
     filesystem::create_directory(IMAGE_FOLDER);
-    filesystem::copy(path.u8string(), newImagePath.u8string(), filesystem::copy_options::overwrite_existing);
+    try
+    {
+        filesystem::copy(path.u8string(), newImagePath.u8string(), filesystem::copy_options::overwrite_existing);
+    }
+    catch (exception)
+    {
+        throw invalid_argument("File does not exists: " + m_path.string());
+    }
     shared_ptr<IImage> image = make_shared<CImage>(newImagePath, width, height);
     CDocumentItem itemHolder(image, nullptr);
     if (position == nullopt)
@@ -127,7 +134,6 @@ void CHtmlDocument::Save(const Path& path) const
                    << "\" height=\"" << image->GetHeight() << "\" src=\"img\"/>"<< endl;
     }
     output << "</html>";
-    output.close();
     auto resultPath = path.parent_path() / IMAGE_FOLDER;
     filesystem::copy(IMAGE_FOLDER.u8string(), resultPath.u8string(), filesystem::copy_options::recursive | filesystem::copy_options::overwrite_existing);
 }

@@ -11,6 +11,10 @@ public:
 		, m_item(document.GetItem(position))
 	{
 	}
+	~CDeleteItemCommand()
+	{
+		Destroy();
+	}
 
 protected:
 
