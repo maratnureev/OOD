@@ -1,0 +1,19 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080' viewPort='0 0 1920 1080'>
+<polygon points = '0.000000,600.000000 1200.000000,600.000000 1200.000000,1100.000000 0.000000,1100.000000' fill = 'rgb(82,78,42)'/><line x1 = '0' y1 = '600' x2 = '1200' y2 = '600' stroke = 'rgb(82,78,42)' stroke-width = '2'/>
+<line x1 = '1200' y1 = '600' x2 = '1200' y2 = '1100' stroke = 'rgb(82,78,42)' stroke-width = '2'/>
+<line x1 = '1200' y1 = '1100' x2 = '0' y2 = '1100' stroke = 'rgb(82,78,42)' stroke-width = '2'/>
+<line x1 = '0' y1 = '1100' x2 = '0' y2 = '600' stroke = 'rgb(82,78,42)' stroke-width = '2'/>
+<polygon points = '100.000000,400.000000 400.000000,400.000000 400.000000,600.000000 100.000000,600.000000' fill = 'rgb(121,49,25)'/><line x1 = '100' y1 = '400' x2 = '400' y2 = '400' stroke = 'rgb(121,49,25)' stroke-width = '2'/>
+<line x1 = '400' y1 = '400' x2 = '400' y2 = '600' stroke = 'rgb(121,49,25)' stroke-width = '2'/>
+<line x1 = '400' y1 = '600' x2 = '100' y2 = '600' stroke = 'rgb(121,49,25)' stroke-width = '2'/>
+<line x1 = '100' y1 = '600' x2 = '100' y2 = '400' stroke = 'rgb(121,49,25)' stroke-width = '2'/>
+<polygon points = '200.000000,470.000000 300.000000,470.000000 300.000000,570.000000 200.000000,570.000000' fill = 'rgb(70,245,244)'/><line x1 = '200' y1 = '470' x2 = '300' y2 = '470' stroke = 'rgb(70,245,244)' stroke-width = '2'/>
+<line x1 = '300' y1 = '470' x2 = '300' y2 = '570' stroke = 'rgb(70,245,244)' stroke-width = '2'/>
+<line x1 = '300' y1 = '570' x2 = '200' y2 = '570' stroke = 'rgb(70,245,244)' stroke-width = '2'/>
+<line x1 = '200' y1 = '570' x2 = '200' y2 = '470' stroke = 'rgb(70,245,244)' stroke-width = '2'/>
+<polygon points = '80.000000,400.000000 420.000000,400.000000 250.000000,200.000000' fill = 'rgb(17,170,78)'/><line x1 = '80' y1 = '400' x2 = '420' y2 = '400' stroke = 'rgb(17,170,78)' stroke-width = '2'/>
+<line x1 = '420' y1 = '400' x2 = '250' y2 = '200' stroke = 'rgb(17,170,78)' stroke-width = '2'/>
+<line x1 = '250' y1 = '200' x2 = '80' y2 = '400' stroke = 'rgb(17,170,78)' stroke-width = '2'/>
+<ellipse rx='120' ry='65' cx='760' cy='765' stroke='rgb(70,245,244)' stroke-width='2' fill='rgb(70,245,244)' />
+<ellipse rx='100' ry='100' cx='850' cy='250' stroke='rgb(231,239,50)' stroke-width='2' fill='rgb(231,239,50)' />
+</svg>
