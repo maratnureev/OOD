@@ -37,14 +37,12 @@ int main()
     picture->InsertShape(roof);
     picture->InsertShape(lake);
     picture->InsertShape(sun);
+    //picture->GetOutlineStyle()->SetColor(0x0000ff);
+    //picture->GetOutlineStyle()->SetStrokeSize(9);
 
     slide.InsertShape(picture);
-
-    //picture->GetFillStyle().SetColor(0x46F5F4);
-    //picture->GetOutlineStyle().SetColor(0x46F5F4);
-    //picture->GetOutlineStyle().SetLineWidth(9);
-    //RectD frame = picture->GetFrame();
-    //picture->SetFrame(RectD{ 0, 0, 400, 300 });
+    RectD frame = picture->GetFrame();
+    picture->SetFrame(RectD{ 0, 700, 800, 300 });
     slide.Draw(canvas);
     canvas.EndDraw();
 }

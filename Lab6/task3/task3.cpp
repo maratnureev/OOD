@@ -24,7 +24,7 @@ namespace app
 			float red = (float)((rgbColor >> 16) & 0xff);
 			float green = (float)((rgbColor >> 8) & 0xff);
 			float blue = (float)(rgbColor & 0xff);
-			modern_graphics_lib::CRGBAColor rgba(red/100, green/100, blue/100, 1);
+			modern_graphics_lib::CRGBAColor rgba(red/255, green/255, blue/255, 1);
 			m_rgba = rgba;
 		}
 		void MoveTo(int x, int y) override

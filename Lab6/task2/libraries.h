@@ -185,7 +185,7 @@ namespace modern_graphics_lib
 
 namespace app
 {
-	class CModernGraphicsRendererAdapter : public modern_graphics_lib::CModernGraphicsRenderer, public graphics_lib::ICanvas
+	class CModernGraphicsRendererAdapter : private modern_graphics_lib::CModernGraphicsRenderer, public graphics_lib::ICanvas
 	{
 	public:
 		CModernGraphicsRendererAdapter(ostream& strm)

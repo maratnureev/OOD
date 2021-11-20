@@ -49,7 +49,7 @@ SCENARIO("adapter lineTo test")
 		rendererAdapter.LineTo(1, 1);
 	}
 
-	REQUIRE(out.str() == "<draw>\n<line fromX='0' fromY='0' toX='1' toY='1'>\n<color r='0' g='0' b='0' a='0'/>\n</line>\n</draw>\n");
+	REQUIRE(out.str() == "<draw>\n<line fromX='0' fromY='0' toX='1' toY='1'>\n<color r='0' g='0' b='0' a='1'/>\n</line>\n</draw>\n");
 }
 
 SCENARIO("adapter setColor test")
@@ -63,5 +63,5 @@ SCENARIO("adapter setColor test")
 		rendererAdapter.LineTo(1, 1);
 	}
 
-	REQUIRE(out.str() == "<draw>\n<line fromX='0' fromY='0' toX='1' toY='1'>\n<color r='0.15' g='0.66' b='0.63' a='1'/>\n</line>\n</draw>\n");
+	REQUIRE(out.str() == "<draw>\n<line fromX='0' fromY='0' toX='1' toY='1'>\n<color r='0.0588235' g='0.258824' b='0.247059' a='1'/>\n</line>\n</draw>\n");
 }

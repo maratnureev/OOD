@@ -3,8 +3,6 @@
 #include "IShape.h"
 #include "IDrawable.h"
 
-using namespace std;
-
 class CSlide : public IDrawable
 {
 public:
@@ -22,7 +20,7 @@ public:
 	double GetWidth()const;
 	double GetHeight()const;
 private:
-	vector<shared_ptr<IShape>> m_shapes;
+	std::vector<std::shared_ptr<IShape>> m_shapes;
 	double m_width = 0;
 	double m_height = 0;
 };

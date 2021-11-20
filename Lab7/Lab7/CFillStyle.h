@@ -1,18 +1,17 @@
 #pragma once
 #include "CommonTypes.h"
 #include <optional>
+#include "IStyle.h"
 
-using namespace std;
-
-class CFillStyle
+class CFillStyle : public IFillStyle
 {
 public:
-	RGBAColor GetColor()const
+	RGBAColor GetColor()const override
 	{
 		return m_color;
 	}
 
-	void SetColor(RGBAColor color)
+	void SetColor(RGBAColor color) override
 	{
 		m_color = color;
 	}

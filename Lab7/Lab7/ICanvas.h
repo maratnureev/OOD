@@ -2,8 +2,6 @@
 #include "CommonTypes.h"
 #include <vector>
 
-using namespace std;
-
 class ICanvas
 {
 public:

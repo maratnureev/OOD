@@ -6,15 +6,13 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
-
 const int CANVAS_WIDTH = 1920;
 const int CANVAS_HEIGHT = 1080;
 
 class CCanvas : public ICanvas
 {
 public:
-	CCanvas(ostream& strm)
+	CCanvas(std::ostream& strm)
 		: m_out(strm)
 		, m_fillColor(0)
 		, m_lineColor(0)
@@ -43,7 +41,7 @@ public:
 	{
 		if (m_filling)
 		{
-			throw logic_error("Filling has already begun");
+			throw std::logic_error("Filling has already begun");
 		}
 		m_filling = true;
 		m_fillColor = color;
@@ -53,7 +51,7 @@ public:
 	{
 		if (!m_filling)
 		{
-			throw logic_error("Drawing has not been started");
+			throw std::logic_error("Drawing has not been started");
 		}
 		m_filling = false;
 	}
@@ -62,7 +60,7 @@ public:
 	{
 		if (m_drawing)
 		{
-			throw logic_error("Drawing has already begun");
+			throw std::logic_error("Drawing has already begun");
 		}
 		m_out << "<svg "
 			<< "xmlns='http://www.w3.org/2000/svg' "
@@ -85,9 +83,9 @@ public:
 	{
 		if (!m_drawing)
 		{
-			throw logic_error("Drawing has not been started");
+			throw std::logic_error("Drawing has not been started");
 		}
-		m_out << "</svg>" << endl;
+		m_out << "</svg>" << std::endl;
 		m_drawing = false;
 	}
 
@@ -101,27 +99,27 @@ public:
 			<< std::endl;
 	}
 
-	void FillPolygon(vector<PointD> points) override
+	void FillPolygon(std::vector<PointD> points) override
 	{
 		if (points.size() == 0)
 		{
-			throw logic_error("FillPolygon with zero vertexes");
+			throw std::logic_error("FillPolygon with zero vertexes");
 		}
 
-		string vertexesString;
-		for_each(points.begin(), points.end(), [&vertexesString](PointD point) {
-			vertexesString += to_string(point.x) + "," + to_string(point.y) + " ";
+		std::string vertexesString;
+		std::for_each(points.begin(), points.end(), [&vertexesString](PointD point) {
+			vertexesString += std::to_string(point.x) + "," + std::to_string(point.y) + " ";
 			});
 		vertexesString.pop_back();
 
 		m_out
 			<< "<polygon "
 			<< "points = '" << vertexesString << "' "
-			<< "fill = '" << ConvertRgbaToString(m_fillColor) << "'/>";
+			<< "fill = '" << ConvertRgbaToString(m_fillColor) << "'/>" << std::endl;
 	}
 
 private:
-	ostream& m_out;
+	std::ostream& m_out;
 	double m_lineWidth = 0;
 	bool m_drawing = false;
 	bool m_filling = false;
@@ -130,12 +128,12 @@ private:
 	double m_startX = 0;
 	double m_startY = 0;
 
-	string ConvertRgbaToString(RGBAColor color)
+	std::string ConvertRgbaToString(RGBAColor color)
 	{
-		int red = (m_fillColor >> 16) & 0xff;
-		int green = (m_fillColor >> 8) & 0xff;
-		int blue = m_fillColor & 0xff;
-		return  "rgb(" + to_string(red) + "," + to_string(green) + "," + to_string(blue) + ")";
+		int red = (color >> 16) & 0xff;
+		int green = (color >> 8) & 0xff;
+		int blue = color & 0xff;
+		return  "rgb(" + std::to_string(red) + "," + std::to_string(green) + "," + std::to_string(blue) + ")";
 	}
 };
 

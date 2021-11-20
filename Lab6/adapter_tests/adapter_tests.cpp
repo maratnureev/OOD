@@ -12,6 +12,7 @@ SCENARIO("adapter constructor test")
 {
 	ostringstream out;
 	modern_graphics_lib::CModernGraphicsRenderer renderer(out);
+	renderer.BeginDraw();
 	app::CModernGraphicsRendererAdapter rendererAdapter(renderer);
 	REQUIRE(out.str() == "<draw>\n");
 }
@@ -19,10 +20,10 @@ SCENARIO("adapter constructor test")
 SCENARIO("adapter destructor test")
 {
 	ostringstream out;
-	{
-		modern_graphics_lib::CModernGraphicsRenderer renderer(out);
-		app::CModernGraphicsRendererAdapter rendererAdapter(renderer);
-	}
+	modern_graphics_lib::CModernGraphicsRenderer renderer(out);
+	app::CModernGraphicsRendererAdapter rendererAdapter(renderer);
+	renderer.BeginDraw();
+	renderer.EndDraw();
 
 	REQUIRE(out.str() == "<draw>\n</draw>\n");
 }
@@ -30,11 +31,11 @@ SCENARIO("adapter destructor test")
 SCENARIO("adapter moveTo test")
 {
 	ostringstream out;
-	{
-		modern_graphics_lib::CModernGraphicsRenderer renderer(out);
-		app::CModernGraphicsRendererAdapter rendererAdapter(renderer);
-		rendererAdapter.MoveTo(0, 0);
-	}
+	modern_graphics_lib::CModernGraphicsRenderer renderer(out);
+	app::CModernGraphicsRendererAdapter rendererAdapter(renderer);
+	renderer.BeginDraw();
+	rendererAdapter.MoveTo(0, 0);
+	renderer.EndDraw();
 
 	REQUIRE(out.str() == "<draw>\n</draw>\n");
 }
@@ -42,12 +43,12 @@ SCENARIO("adapter moveTo test")
 SCENARIO("adapter lineTo test")
 {
 	ostringstream out;
-	{
-		modern_graphics_lib::CModernGraphicsRenderer renderer(out);
-		app::CModernGraphicsRendererAdapter rendererAdapter(renderer);
-		rendererAdapter.MoveTo(0, 0);
-		rendererAdapter.LineTo(1, 1);
-	}
+	modern_graphics_lib::CModernGraphicsRenderer renderer(out);
+	app::CModernGraphicsRendererAdapter rendererAdapter(renderer);
+	renderer.BeginDraw();
+	rendererAdapter.MoveTo(0, 0);
+	rendererAdapter.LineTo(1, 1);
+	renderer.EndDraw();
 
 	REQUIRE(out.str() == "<draw>\n<line fromX='0' fromY='0' toX='1' toY='1'/>\n</draw>\n");
 }

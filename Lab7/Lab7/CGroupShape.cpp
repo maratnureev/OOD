@@ -1,6 +1,8 @@
 #include "CGroupShape.h"
 #include <algorithm>
 
+using namespace std;
+
 RectD CGroupShape::GetFrame()
 {
 	if (m_shapes.empty())
@@ -14,7 +16,7 @@ RectD CGroupShape::GetFrame()
 		leftXCoords.push_back(shape->GetFrame().left);
 		topYCoords.push_back(shape->GetFrame().top);
 		rightXCoords.push_back(shape->GetFrame().left + shape->GetFrame().width);
-		bottomYCoords.push_back(shape->GetFrame().top - shape->GetFrame().height);
+		bottomYCoords.push_back(shape->GetFrame().top + shape->GetFrame().height);
 	}
 
 	double left = *min_element(leftXCoords.begin(), leftXCoords.end());
@@ -27,27 +29,43 @@ RectD CGroupShape::GetFrame()
 
 void CGroupShape::SetFrame(const RectD& rect)
 {
+	auto oldFrame = GetFrame();
+	auto widthRatio = rect.width / oldFrame.width;
+	auto heightRation = rect.height / oldFrame.height;
+	auto leftOffset = oldFrame.left - rect.left;
+	auto topOffset = oldFrame.top - rect.top;
+	for (auto shape : m_shapes)
+	{
+		auto shapeFrame = shape->GetFrame();
+		auto newFrame = RectD{ widthRatio*(shapeFrame.left + leftOffset), heightRation * (shapeFrame.top + topOffset), shapeFrame.width * widthRatio, shapeFrame.height * heightRation };
+		shape->SetFrame(newFrame);
+	}
 }
 
-shared_ptr<CLineStyle> CGroupShape::GetOutlineStyle()
+shared_ptr<IOutlineStyle> CGroupShape::GetOutlineStyle()
 {
 	if (m_shapes.empty())
 		throw logic_error("group is empty");
 	auto firstElemColor = m_shapes[0]->GetOutlineStyle()->GetColor();
+	auto firstElemWidth = m_shapes[0]->GetOutlineStyle()->GetStrokeSize();
 	for (auto shape : m_shapes)
 	{
-		if (firstElemColor != shape->GetOutlineStyle()->GetColor())
+		if (firstElemColor != shape->GetOutlineStyle()->GetColor() || firstElemWidth != shape->GetOutlineStyle()->GetStrokeSize())
 			return nullptr;
 	}
-	return m_shapes[0]->GetOutlineStyle();
+	shared_ptr<IOutlineStyle>lineStyle = make_shared<CGroupLineStyle>(m_shapes);
+	m_groupLineStyle = lineStyle;
+	m_groupLineStyle->SetColor(firstElemColor);
+	m_groupLineStyle->SetStrokeSize(firstElemWidth);
+	return m_groupLineStyle;
 }
 
-const shared_ptr<CLineStyle> CGroupShape::GetOutlineStyle() const
+const shared_ptr<IOutlineStyle> CGroupShape::GetOutlineStyle() const
 {
 	return GetOutlineStyle();
 }
 
-shared_ptr<CFillStyle> CGroupShape::GetFillStyle()
+shared_ptr<IFillStyle> CGroupShape::GetFillStyle()
 {
 	if (m_shapes.empty())
 		throw logic_error("group is empty");
@@ -57,10 +75,13 @@ shared_ptr<CFillStyle> CGroupShape::GetFillStyle()
 		if (firstElemColor != shape->GetFillStyle()->GetColor())
 			return nullptr;
 	}
-	return m_shapes[0]->GetFillStyle();
+	shared_ptr<IFillStyle>fillStyle = make_shared<CGroupFillStyle>(m_shapes);
+	m_groupFillStyle = fillStyle;
+	m_groupFillStyle->SetColor(firstElemColor);
+	return m_groupFillStyle;
 }
 
-const shared_ptr<CFillStyle> CGroupShape::GetFillStyle() const
+const shared_ptr<IFillStyle> CGroupShape::GetFillStyle() const
 {
 	return GetFillStyle();
 }

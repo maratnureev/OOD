@@ -191,11 +191,6 @@ namespace app
 			: m_renderer(renderer)
 			, m_start(0, 0)
 		{
-			m_renderer.BeginDraw();
-		}
-		~CModernGraphicsRendererAdapter()
-		{
-			m_renderer.EndDraw();
 		}
 		void MoveTo(int x, int y) override
 		{

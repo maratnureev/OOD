@@ -12,10 +12,10 @@ public:
 	{
 		double xCoords[] = { p1.x, p2.x, p3.x };
 		double yCoords[] = { p1.y, p2.y, p3.y };
-		double left = *min_element(xCoords, xCoords + 3);
-		double right = *max_element(xCoords, xCoords + 3);
-		double bottom = *min_element(yCoords, yCoords + 3);
-		double top = *max_element(yCoords, yCoords + 3);
+		double left = *std::min_element(xCoords, xCoords + 3);
+		double right = *std::max_element(xCoords, xCoords + 3);
+		double bottom = *std::min_element(yCoords, yCoords + 3);
+		double top = *std::max_element(yCoords, yCoords + 3);
 		RectD rect = {
 			left,
 			top,
@@ -29,15 +29,15 @@ public:
 	{
 		auto outlineStyle = GetOutlineStyle();
 		if (outlineStyle == nullptr)
-			throw logic_error("invalid outline style for basic shape");
+			throw std::logic_error("invalid outline style for basic shape");
 
 		canvas.SetLineColor(outlineStyle->GetColor());
 		canvas.SetLineWidth(outlineStyle->GetStrokeSize());
 		auto fillStyle = GetFillStyle();
 		if (fillStyle == nullptr)
-			throw logic_error("invalid line style for basic shape");
+			throw std::logic_error("invalid line style for basic shape");
 		canvas.BeginFill(fillStyle->GetColor());
-		vector<PointD> points;
+		std::vector<PointD> points;
 		points.push_back(m_p1);
 		points.push_back(m_p2);
 		points.push_back(m_p3);
@@ -50,9 +50,13 @@ public:
 
 	void SetFrame(const RectD& rect) override
 	{
-		m_p1 = PointD{ rect.left, rect.top};
-		m_p2 = PointD{ rect.left + rect.width, rect.top};
-		m_p3 = PointD{ rect.left + rect.width / 2, rect.top - rect.height };
+		m_p1.x = rect.left;
+		m_p1.y = rect.top;
+		m_p2.x = rect.left + rect.width;
+		m_p2.y = rect.top;
+		m_p3.x = rect.left + rect.width / 2;
+		m_p3.y = rect.top - rect.height;
+		m_frame = rect;
 	}
 
 private:

@@ -1,5 +1,7 @@
 #include "CSlide.h"
 
+using namespace std;
+
 double CSlide::GetWidth() const
 {
 	return m_width;

@@ -1,28 +1,27 @@
 #pragma once
 #include "CommonTypes.h"
 #include <optional>
+#include "IStyle.h"
 
-using namespace std;
-
-class CLineStyle
+class CLineStyle : public IOutlineStyle
 {
 public:
-	RGBAColor GetColor()const
+	RGBAColor GetColor()const override
 	{
 		return m_color;
 	}
 
-	void SetColor(RGBAColor color)
+	void SetColor(RGBAColor color) override
 	{
 		m_color = color;
 	}
 
-	double GetStrokeSize() const
+	double GetStrokeSize() const override
 	{
 		return m_strokeSize;
 	}
 
-	void SetStrokeSize(double size)
+	void SetStrokeSize(double size) override
 	{
 		m_strokeSize = size;
 	}

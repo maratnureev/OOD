@@ -30,8 +30,10 @@ namespace app
 	void PaintPictureOnModernGraphicsRenderer()
 	{
 		modern_graphics_lib::CModernGraphicsRenderer renderer(cout);
+		renderer.BeginDraw();
 		CModernGraphicsRendererAdapter rendererAdapter(renderer);
 		shape_drawing_lib::CCanvasPainter painter(rendererAdapter);
+		renderer.EndDraw();
 		PaintPicture(painter);
 	}
 }
