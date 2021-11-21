@@ -1,12 +1,12 @@
 #pragma once
-#include "IDrawable.h"
 #include "IStyle.h"
 #include <optional>
 #include <memory>
+#include "ICanvas.h"
 
 class IGroupShape;
 
-class IShape : public IDrawable
+class IShape
 {
 public:
 	// const method
@@ -24,6 +24,8 @@ public:
 
 	virtual std::shared_ptr<IGroupShape> GetParent() const = 0;
 	virtual void SetParent(std::shared_ptr<IGroupShape> parent) = 0;
+
+	virtual void Draw(ICanvas& canvas)const = 0;
 
 	virtual ~IShape() = default;
 };

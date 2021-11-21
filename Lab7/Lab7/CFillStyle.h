@@ -6,7 +6,7 @@
 class CFillStyle : public IFillStyle
 {
 public:
-	RGBAColor GetColor()const override
+	std::optional<RGBAColor> GetColor()const override
 	{
 		return m_color;
 	}

@@ -7,13 +7,14 @@
 class CGroupFillStyle : public IFillStyle
 {
 public:
-	CGroupFillStyle(std::vector<std::shared_ptr<IShape>>& shapes)
+	CGroupFillStyle(std::vector<std::shared_ptr<IShape>>& shapes, std::optional<RGBAColor> color)
 		:m_shapes(shapes)
+		,m_color(color)
 	{}
 
-	RGBAColor GetColor()const override
+	std::optional<RGBAColor> GetColor()const override
 	{
-		return m_shapes[0]->GetFillStyle()->GetColor();
+		return m_color;
 	}
 
 	void SetColor(RGBAColor color) override
@@ -24,4 +25,5 @@ public:
 
 private:
 	std::vector<std::shared_ptr<IShape>>& m_shapes;
+	std::optional<RGBAColor> m_color;
 };

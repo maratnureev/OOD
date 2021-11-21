@@ -44,9 +44,6 @@
     <ClInclude Include="CommonTypes.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="IDrawable.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="IShape.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>

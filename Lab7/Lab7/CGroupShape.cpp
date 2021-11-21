@@ -1,4 +1,5 @@
 #include "CGroupShape.h"
+#include "ICanvas.h"
 #include <algorithm>
 
 using namespace std;
@@ -48,15 +49,17 @@ shared_ptr<IOutlineStyle> CGroupShape::GetOutlineStyle()
 		throw logic_error("group is empty");
 	auto firstElemColor = m_shapes[0]->GetOutlineStyle()->GetColor();
 	auto firstElemWidth = m_shapes[0]->GetOutlineStyle()->GetStrokeSize();
+	bool isColorEqual = true;
+	bool isLineSizeEqual = true;
 	for (auto shape : m_shapes)
 	{
-		if (firstElemColor != shape->GetOutlineStyle()->GetColor() || firstElemWidth != shape->GetOutlineStyle()->GetStrokeSize())
-			return nullptr;
+		if (firstElemColor != shape->GetOutlineStyle()->GetColor())
+			isColorEqual = false;
+		if (firstElemWidth != shape->GetOutlineStyle()->GetStrokeSize())
+			isLineSizeEqual = false;
 	}
-	shared_ptr<IOutlineStyle>lineStyle = make_shared<CGroupLineStyle>(m_shapes);
+	shared_ptr<IOutlineStyle>lineStyle = make_shared<CGroupLineStyle>(m_shapes, isColorEqual ? firstElemColor : nullopt, isLineSizeEqual ? firstElemWidth : nullopt);
 	m_groupLineStyle = lineStyle;
-	m_groupLineStyle->SetColor(firstElemColor);
-	m_groupLineStyle->SetStrokeSize(firstElemWidth);
 	return m_groupLineStyle;
 }
 
@@ -70,14 +73,17 @@ shared_ptr<IFillStyle> CGroupShape::GetFillStyle()
 	if (m_shapes.empty())
 		throw logic_error("group is empty");
 	auto firstElemColor = m_shapes[0]->GetFillStyle()->GetColor();
+	bool isColorEqual = true;
 	for (auto shape : m_shapes)
 	{
 		if (firstElemColor != shape->GetFillStyle()->GetColor())
-			return nullptr;
+		{
+			isColorEqual = false;
+			break;
+		}
 	}
-	shared_ptr<IFillStyle>fillStyle = make_shared<CGroupFillStyle>(m_shapes);
+	shared_ptr<IFillStyle>fillStyle = make_shared<CGroupFillStyle>(m_shapes, isColorEqual ? firstElemColor : nullopt);
 	m_groupFillStyle = fillStyle;
-	m_groupFillStyle->SetColor(firstElemColor);
 	return m_groupFillStyle;
 }
 

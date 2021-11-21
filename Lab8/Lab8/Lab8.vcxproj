@@ -21,9 +21,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0e6ae5aa-612b-447a-a8d8-7a7f6015f340}</ProjectGuid>
-    <RootNamespace>Lab7</RootNamespace>
+    <ProjectGuid>{c1caad2a-e352-47cd-87e5-9166085053ec}</ProjectGuid>
+    <RootNamespace>Lab8</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>GumbleMachine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -88,8 +89,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,8 +117,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,31 +140,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CCanvas.cpp" />
-    <ClCompile Include="CEllipse.cpp" />
-    <ClCompile Include="CGroupShape.cpp" />
-    <ClCompile Include="CShape.cpp" />
-    <ClCompile Include="CSlide.cpp" />
-    <ClCompile Include="CTriangle.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CCanvas.h" />
-    <ClInclude Include="CEllipse.h" />
-    <ClInclude Include="CFillStyle.h" />
-    <ClInclude Include="CGroupLineStyle.h" />
-    <ClInclude Include="CGroupShape.h" />
-    <ClInclude Include="CGroupStyle.h" />
-    <ClInclude Include="CLineStyle.h" />
-    <ClInclude Include="CommonTypes.h" />
-    <ClInclude Include="CRectangle.h" />
-    <ClInclude Include="CShape.h" />
-    <ClInclude Include="CSlide.h" />
-    <ClInclude Include="CTriangle.h" />
-    <ClInclude Include="ICanvas.h" />
-    <ClInclude Include="IGroupShape.h" />
-    <ClInclude Include="IShape.h" />
-    <ClInclude Include="IStyle.h" />
+    <ClInclude Include="GumBallMachineWithState.h" />
+    <ClInclude Include="NaiveGumBallMachine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,7 +6,7 @@
 class CLineStyle : public IOutlineStyle
 {
 public:
-	RGBAColor GetColor()const override
+	std::optional<RGBAColor> GetColor()const override
 	{
 		return m_color;
 	}
@@ -16,7 +16,7 @@ public:
 		m_color = color;
 	}
 
-	double GetStrokeSize() const override
+	std::optional<double> GetStrokeSize() const override
 	{
 		return m_strokeSize;
 	}
@@ -28,5 +28,5 @@ public:
 
 private:
 	RGBAColor m_color = 0;
-	double m_strokeSize = 2;
+	double m_strokeSize = 0;
 };

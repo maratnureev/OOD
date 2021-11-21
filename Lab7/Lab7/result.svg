@@ -1,23 +1,23 @@
 <svg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080' viewPort='0 0 1920 1080'>
 <polygon points = '0.000000,400.000000 800.000000,400.000000 800.000000,733.333333 0.000000,733.333333' fill = 'rgb(82,78,42)'/>
-<line x1 = '0' y1 = '400' x2 = '800' y2 = '400' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '800' y1 = '400' x2 = '800' y2 = '733.333' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '800' y1 = '733.333' x2 = '0' y2 = '733.333' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '0' y1 = '733.333' x2 = '0' y2 = '400' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
+<line x1 = '0' y1 = '400' x2 = '800' y2 = '400' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '800' y1 = '400' x2 = '800' y2 = '733.333' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '800' y1 = '733.333' x2 = '0' y2 = '733.333' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '0' y1 = '733.333' x2 = '0' y2 = '400' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
 <polygon points = '66.666667,266.666667 266.666667,266.666667 266.666667,400.000000 66.666667,400.000000' fill = 'rgb(121,49,25)'/>
-<line x1 = '66.6667' y1 = '266.667' x2 = '266.667' y2 = '266.667' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '266.667' y1 = '266.667' x2 = '266.667' y2 = '400' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '266.667' y1 = '400' x2 = '66.6667' y2 = '400' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '66.6667' y1 = '400' x2 = '66.6667' y2 = '266.667' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
+<line x1 = '66.6667' y1 = '266.667' x2 = '266.667' y2 = '266.667' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '266.667' y1 = '266.667' x2 = '266.667' y2 = '400' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '266.667' y1 = '400' x2 = '66.6667' y2 = '400' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '66.6667' y1 = '400' x2 = '66.6667' y2 = '266.667' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
 <polygon points = '133.333333,313.333333 200.000000,313.333333 200.000000,380.000000 133.333333,380.000000' fill = 'rgb(70,245,244)'/>
-<line x1 = '133.333' y1 = '313.333' x2 = '200' y2 = '313.333' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '200' y1 = '313.333' x2 = '200' y2 = '380' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '200' y1 = '380' x2 = '133.333' y2 = '380' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '133.333' y1 = '380' x2 = '133.333' y2 = '313.333' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
+<line x1 = '133.333' y1 = '313.333' x2 = '200' y2 = '313.333' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '200' y1 = '313.333' x2 = '200' y2 = '380' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '200' y1 = '380' x2 = '133.333' y2 = '380' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '133.333' y1 = '380' x2 = '133.333' y2 = '313.333' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
 <polygon points = '53.333333,266.666667 280.000000,266.666667 166.666667,133.333333' fill = 'rgb(17,170,78)'/>
-<line x1 = '53.3333' y1 = '266.667' x2 = '280' y2 = '266.667' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '280' y1 = '266.667' x2 = '166.667' y2 = '133.333' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<line x1 = '166.667' y1 = '133.333' x2 = '53.3333' y2 = '266.667' stroke = 'rgb(0,0,255)' stroke-width = '9'/>
-<ellipse rx='80' ry='43.3333' cx='506.667' cy='510' stroke='rgb(0,0,255)' stroke-width='9' fill='rgb(70,245,244)' />
-<ellipse rx='66.6667' ry='66.6667' cx='566.667' cy='166.667' stroke='rgb(0,0,255)' stroke-width='9' fill='rgb(231,239,50)' />
+<line x1 = '53.3333' y1 = '266.667' x2 = '280' y2 = '266.667' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '280' y1 = '266.667' x2 = '166.667' y2 = '133.333' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<line x1 = '166.667' y1 = '133.333' x2 = '53.3333' y2 = '266.667' stroke = 'rgb(0,0,0)' stroke-width = '2'/>
+<ellipse rx='80' ry='43.3333' cx='506.667' cy='510' stroke='rgb(0,0,0)' stroke-width='2' fill='rgb(70,245,244)' />
+<ellipse rx='66.6667' ry='66.6667' cx='566.667' cy='166.667' stroke='rgb(0,0,0)' stroke-width='2' fill='rgb(231,239,50)' />
 </svg>

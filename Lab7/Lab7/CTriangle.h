@@ -31,12 +31,12 @@ public:
 		if (outlineStyle == nullptr)
 			throw std::logic_error("invalid outline style for basic shape");
 
-		canvas.SetLineColor(outlineStyle->GetColor());
-		canvas.SetLineWidth(outlineStyle->GetStrokeSize());
+		canvas.SetLineColor(*outlineStyle->GetColor());
+		canvas.SetLineWidth(*outlineStyle->GetStrokeSize());
 		auto fillStyle = GetFillStyle();
 		if (fillStyle == nullptr)
 			throw std::logic_error("invalid line style for basic shape");
-		canvas.BeginFill(fillStyle->GetColor());
+		canvas.BeginFill(*fillStyle->GetColor());
 		std::vector<PointD> points;
 		points.push_back(m_p1);
 		points.push_back(m_p2);

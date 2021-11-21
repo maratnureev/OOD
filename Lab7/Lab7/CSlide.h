@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
 #include "IShape.h"
-#include "IDrawable.h"
+#include "ICanvas.h"
 
-class CSlide : public IDrawable
+class CSlide
 {
 public:
 	CSlide(double width, double height)
@@ -15,7 +15,7 @@ public:
 	void InsertShape(const std::shared_ptr<IShape>& shape, size_t position = std::numeric_limits<size_t>::max());
 	std::shared_ptr<IShape> GetShapeAtIndex(size_t index) const;
 	void RemoveShapeAtIndex(size_t index);
-	void Draw(ICanvas& canvas) const override;
+	void Draw(ICanvas& canvas) const;
 
 	double GetWidth()const;
 	double GetHeight()const;

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0e6ae5aa-612b-447a-a8d8-7a7f6015f340}</ProjectGuid>
-    <RootNamespace>Lab7</RootNamespace>
+    <ProjectGuid>{0b89037a-cc00-4f54-b4dd-cf722fa09bbc}</ProjectGuid>
+    <RootNamespace>MultiGumballMachine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -143,31 +143,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CCanvas.cpp" />
-    <ClCompile Include="CEllipse.cpp" />
-    <ClCompile Include="CGroupShape.cpp" />
-    <ClCompile Include="CShape.cpp" />
-    <ClCompile Include="CSlide.cpp" />
-    <ClCompile Include="CTriangle.cpp" />
+    <ClCompile Include="CMenu.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CCanvas.h" />
-    <ClInclude Include="CEllipse.h" />
-    <ClInclude Include="CFillStyle.h" />
-    <ClInclude Include="CGroupLineStyle.h" />
-    <ClInclude Include="CGroupShape.h" />
-    <ClInclude Include="CGroupStyle.h" />
-    <ClInclude Include="CLineStyle.h" />
-    <ClInclude Include="CommonTypes.h" />
-    <ClInclude Include="CRectangle.h" />
-    <ClInclude Include="CShape.h" />
-    <ClInclude Include="CSlide.h" />
-    <ClInclude Include="CTriangle.h" />
-    <ClInclude Include="ICanvas.h" />
-    <ClInclude Include="IGroupShape.h" />
-    <ClInclude Include="IShape.h" />
-    <ClInclude Include="IStyle.h" />
+    <ClInclude Include="CMenu.h" />
+    <ClInclude Include="GumBallMachineWithState.h" />
+    <ClInclude Include="NaiveGumBallMachine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

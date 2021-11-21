@@ -4,13 +4,15 @@
 class CGroupLineStyle : public IOutlineStyle
 {
 public:
-	CGroupLineStyle(std::vector<std::shared_ptr<IShape>>& shapes)
+	CGroupLineStyle(std::vector<std::shared_ptr<IShape>>& shapes, std::optional<RGBAColor> color, std::optional<double> strokeSize)
 		:m_shapes(shapes)
+		,m_color(color)
+		,m_strokeSize(strokeSize)
 	{}
 
-	RGBAColor GetColor()const override
+	std::optional<RGBAColor> GetColor()const override
 	{
-		return m_shapes[0]->GetOutlineStyle()->GetColor();
+		return m_color;
 	}
 
 	void SetColor(RGBAColor color) override
@@ -19,9 +21,9 @@ public:
 			shape->GetOutlineStyle()->SetColor(color);
 	}
 
-	double GetStrokeSize() const override
+	std::optional<double> GetStrokeSize() const override
 	{
-		return m_shapes[0]->GetOutlineStyle()->GetColor();
+		return m_strokeSize;
 	}
 
 	void SetStrokeSize(double size) override
@@ -32,5 +34,6 @@ public:
 
 private:
 	std::vector<std::shared_ptr<IShape>>& m_shapes;
-
+	std::optional<RGBAColor> m_color;
+	std::optional<double> m_strokeSize;
 };
