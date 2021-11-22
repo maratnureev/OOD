@@ -23,6 +23,7 @@ namespace with_state
 		virtual unsigned GetQuartersAmount()const = 0;
 		virtual void IncreaseQuartersAmount() = 0;
 		virtual void DecreaseQuartersAmount() = 0;
+		virtual void EmptyBank() = 0;
 
 		virtual void SetSoldOutState() = 0;
 		virtual void SetNoQuarterState() = 0;
@@ -202,8 +203,9 @@ namespace with_state
 		}
 		void EjectQuarter() override
 		{
-			m_out << "Quarter returned\n";
-			m_gumballMachine.SetHasQuarterState();
+			m_out << "Quarters returned\n";
+			m_gumballMachine.EmptyBank();
+			m_gumballMachine.SetNoQuarterState();
 		}
 		void TurnCrank() override
 		{
@@ -265,7 +267,7 @@ namespace with_state
 		}
 		void Refill(unsigned numBalls)
 		{
-			m_count += numBalls;
+			m_count = numBalls;
 			if (numBalls > 0 && m_quartersAmount == 0)
 				SetNoQuarterState();
 			else if (numBalls > 0 && m_quartersAmount > 0 && m_quartersAmount < MAX_QUARTERS)
@@ -294,6 +296,11 @@ namespace with_state
 		void DecreaseQuartersAmount() override
 		{
 			m_quartersAmount--;
+		}
+
+		void EmptyBank() override
+		{
+			m_quartersAmount = 0;
 		}
 
 		void ReleaseBall() override

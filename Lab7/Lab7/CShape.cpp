@@ -2,7 +2,7 @@
 
 using namespace std;
 
-RectD CShape::GetFrame()
+RectD CShape::GetFrame() const
 {
 	return m_frame;
 }

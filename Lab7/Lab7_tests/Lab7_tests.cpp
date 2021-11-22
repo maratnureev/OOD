@@ -184,3 +184,28 @@ SCENARIO("Test GetColor with different colors in group")
     REQUIRE(picture->GetOutlineStyle()->GetColor() == 0x000000);
     REQUIRE(picture->GetOutlineStyle()->GetStrokeSize() == 0);
 }
+
+SCENARIO("test recursive insertion")
+{
+    shared_ptr<IShape> figure1 = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
+    shared_ptr<IShape> figure2 = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
+    shared_ptr<IShape> figure3 = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
+    shared_ptr<IShape> figure4 = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
+    shared_ptr<IShape> figure5 = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
+    shared_ptr<IShape> figure6 = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
+    std::vector<std::shared_ptr<IShape>> shapes1;
+    shapes1.push_back(figure1);
+    shapes1.push_back(figure2);
+    shared_ptr<IGroupShape> group1 = make_shared<CGroupShape>(shapes1);
+    std::vector<std::shared_ptr<IShape>> shapes2;
+    shapes2.push_back(figure3);
+    shapes2.push_back(figure4);
+    shared_ptr<IGroupShape> group2 = make_shared<CGroupShape>(shapes2);
+    std::vector<std::shared_ptr<IShape>> shapes3;
+    shapes3.push_back(figure5);
+    shapes3.push_back(figure6);
+    shared_ptr<IGroupShape> group3 = make_shared<CGroupShape>(shapes3);
+    REQUIRE_NOTHROW(group1->InsertShape(group2));
+    REQUIRE_NOTHROW(group2->InsertShape(group3));
+    REQUIRE_THROWS(group3->InsertShape(group1));
+}

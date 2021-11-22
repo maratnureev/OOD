@@ -17,6 +17,7 @@ public:
 
 	void SetColor(RGBAColor color) override
 	{
+		m_color = color;
 		for (auto shape : m_shapes)
 			shape->GetOutlineStyle()->SetColor(color);
 	}
@@ -28,6 +29,7 @@ public:
 
 	void SetStrokeSize(double size) override
 	{
+		m_strokeSize = size;
 		for (auto shape : m_shapes)
 			shape->GetOutlineStyle()->SetStrokeSize(size);
 	}

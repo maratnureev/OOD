@@ -10,7 +10,7 @@ public:
 		:m_frame(RectD{ 0, 0, 0, 0 })
 	{}
 
-	RectD GetFrame() override;
+	RectD GetFrame() const override;
 
 	std::shared_ptr<IOutlineStyle> GetOutlineStyle() override;
 	const std::shared_ptr<IOutlineStyle> GetOutlineStyle()const override;

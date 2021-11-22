@@ -19,6 +19,7 @@ public:
 
 	void SetColor(RGBAColor color) override
 	{
+		m_color = color;
 		for (auto shape : m_shapes)
 			shape->GetFillStyle()->SetColor(color);
 	}

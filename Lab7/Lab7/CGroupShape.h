@@ -14,7 +14,7 @@ public:
 		if (shapes.size() < 2)
 			throw std::logic_error("Cannot create group less then from 2 elements");
 	}
-	RectD GetFrame() override;
+	RectD GetFrame() const override;
 	void SetFrame(const RectD& rect) override;
 
 	std::shared_ptr<IOutlineStyle> GetOutlineStyle() override;
@@ -36,7 +36,7 @@ public:
 	std::shared_ptr<IGroupShape> GetParent() const;
 	void SetParent(std::shared_ptr<IGroupShape> parent);
 
-	bool IsParent(std::shared_ptr<IGroupShape> parent);
+	bool IsParent(std::shared_ptr<IShape> parent);
 	
 private:
 	std::shared_ptr<IFillStyle> m_groupFillStyle = nullptr;

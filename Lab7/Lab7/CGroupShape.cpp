@@ -4,7 +4,7 @@
 
 using namespace std;
 
-RectD CGroupShape::GetFrame()
+RectD CGroupShape::GetFrame() const
 {
 	if (m_shapes.empty())
 		throw logic_error("group is empty");
@@ -115,6 +115,9 @@ size_t CGroupShape::GetShapesCount() const
 
 void CGroupShape::InsertShape(const std::shared_ptr<IShape>& shape, size_t position)
 {
+
+	if (IsParent(shape))
+		throw logic_error("Cannot recursive insert");
 	if (position >= m_shapes.size())
 		m_shapes.push_back(shape);
 	else
@@ -122,6 +125,7 @@ void CGroupShape::InsertShape(const std::shared_ptr<IShape>& shape, size_t posit
 		auto it = m_shapes.begin();
 		m_shapes.insert(it, position, shape);
 	}
+	shape->SetParent(GetGroup());
 }
 
 std::shared_ptr<IShape> CGroupShape::GetShapeAtIndex(size_t index) const
@@ -134,6 +138,7 @@ void CGroupShape::RemoveShapeAtIndex(size_t index)
 	if (index > m_shapes.size())
 		throw logic_error("position is out of bounce");
 	auto it = m_shapes.begin();
+	m_shapes.at(index)->SetParent(nullptr);
 	m_shapes.erase(it + index);
 }
 
@@ -147,14 +152,14 @@ void CGroupShape::SetParent(std::shared_ptr<IGroupShape> parent)
 	m_parent = parent;
 }
 
-bool CGroupShape::IsParent(std::shared_ptr<IGroupShape> parent)
+bool CGroupShape::IsParent(std::shared_ptr<IShape> parent)
 {
 	auto currentNode = GetGroup();
 	while (currentNode != nullptr)
 	{
 		if (currentNode == parent)
-			return false;
+			return true;
 		currentNode = currentNode->GetParent();
 	}
-	return true;
+	return false;
 }
