@@ -43,7 +43,7 @@ SCENARIO("test state gumble machine insert 1 quarter and turn")
 		"Machine is waiting for quarter\n");
 }
 
-SCENARIO("test state gumble machine turn without coin and eject")
+SCENARIO("test state gumble machine eject Quarter")
 {
 	ostringstream out;
 	with_state::CGumballMachine m(5, out);
@@ -51,60 +51,33 @@ SCENARIO("test state gumble machine turn without coin and eject")
 	m.TurnCrank();
 	m.InsertQuarter();
 	m.EjectQuarter();
-	m.TurnCrank();
 	REQUIRE(out.str() == "You inserted a quarter\n"
 		"You turned...\n"
 		"A gumball comes rolling out the slot...\n"
 		"You inserted a quarter\n"
-		"Quarter returned\n"
-		"You turned but there's no quarter\n"
-		"You need to pay first\n");
+		"Quarter returned\n");
 	REQUIRE(m.ToString() == "Mighty Gumball, Inc.\n"
 		"C++-enabled Standing Gumball Model #2016 (with state)\n"
 		"Inventory: 4 gumballs\n"
 		"Machine is waiting for quarter\n");
 }
 
-SCENARIO("test state gumble machine insert 4 quarter and eject without coin")
+SCENARIO("test state gumble machine eject without coin")
 {
 	ostringstream out;
 	with_state::CGumballMachine m(5, out);
-	m.InsertQuarter();
-	m.TurnCrank();
-	m.InsertQuarter();
-	m.TurnCrank();
-	m.InsertQuarter();
-	m.TurnCrank();
-	m.InsertQuarter();
-	m.TurnCrank();
 	m.EjectQuarter();
-	REQUIRE(out.str() == "You inserted a quarter\n"
-		"You turned...\n"
-		"A gumball comes rolling out the slot...\n"
-		"You inserted a quarter\n"
-		"You turned...\n"
-		"A gumball comes rolling out the slot...\n"
-		"You inserted a quarter\n"
-		"You turned...\n"
-		"A gumball comes rolling out the slot...\n"
-		"You inserted a quarter\n"
-		"You turned...\n"
-		"A gumball comes rolling out the slot...\n"
-		"You haven't inserted a quarter\n");
+	REQUIRE(out.str() == "You haven't inserted a quarter\n");
 	REQUIRE(m.ToString() == "Mighty Gumball, Inc.\n"
 		"C++-enabled Standing Gumball Model #2016 (with state)\n"
-		"Inventory: 1 gumball\n"
+		"Inventory: 5 gumballs\n"
 		"Machine is waiting for quarter\n");
 }
 
 SCENARIO("test state gumble machine insert 5")
 {
 	ostringstream out;
-	with_state::CGumballMachine m(5, out);
-	m.InsertQuarter();
-	m.TurnCrank();
-	m.InsertQuarter();
-	m.TurnCrank();
+	with_state::CGumballMachine m(3, out);
 	m.InsertQuarter();
 	m.TurnCrank();
 	m.InsertQuarter();
@@ -112,12 +85,6 @@ SCENARIO("test state gumble machine insert 5")
 	m.InsertQuarter();
 	m.TurnCrank();
 	REQUIRE(out.str() == "You inserted a quarter\n"
-		"You turned...\n"
-		"A gumball comes rolling out the slot...\n"
-		"You inserted a quarter\n"
-		"You turned...\n"
-		"A gumball comes rolling out the slot...\n"
-		"You inserted a quarter\n"
 		"You turned...\n"
 		"A gumball comes rolling out the slot...\n"
 		"You inserted a quarter\n"
@@ -149,4 +116,17 @@ SCENARIO("test state gumble machine insert coin when out of gumballs")
 		"C++-enabled Standing Gumball Model #2016 (with state)\n"
 		"Inventory: 0 gumballs\n"
 		"Machine is sold out\n");
+}
+
+SCENARIO("test state gumble machine turn without a coin")
+{
+	ostringstream out;
+	with_state::CGumballMachine m(1, out);
+	m.TurnCrank();
+	REQUIRE(out.str() == "You turned but there's no quarter\n"
+		"You need to pay first\n");
+	REQUIRE(m.ToString() == "Mighty Gumball, Inc.\n"
+		"C++-enabled Standing Gumball Model #2016 (with state)\n"
+		"Inventory: 1 gumball\n"
+		"Machine is waiting for quarter\n");
 }

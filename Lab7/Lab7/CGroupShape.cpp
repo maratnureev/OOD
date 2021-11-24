@@ -30,6 +30,8 @@ RectD CGroupShape::GetFrame() const
 
 void CGroupShape::SetFrame(const RectD& rect)
 {
+	if (m_shapes.empty())
+		return;
 	auto oldFrame = GetFrame();
 	auto widthRatio = rect.width / oldFrame.width;
 	auto heightRation = rect.height / oldFrame.height;
@@ -58,6 +60,7 @@ shared_ptr<IOutlineStyle> CGroupShape::GetOutlineStyle()
 		if (firstElemWidth != shape->GetOutlineStyle()->GetStrokeSize())
 			isLineSizeEqual = false;
 	}
+	// проверять при получении цвета цвета фигур.
 	shared_ptr<IOutlineStyle>lineStyle = make_shared<CGroupLineStyle>(m_shapes, isColorEqual ? firstElemColor : nullopt, isLineSizeEqual ? firstElemWidth : nullopt);
 	m_groupLineStyle = lineStyle;
 	return m_groupLineStyle;
@@ -104,7 +107,7 @@ shared_ptr<const IGroupShape> CGroupShape::GetGroup() const
 
 void CGroupShape::Draw(ICanvas& canvas) const
 {
-	for (auto shape : m_shapes)
+	for (auto& shape : m_shapes)
 		shape->Draw(canvas);
 }
 

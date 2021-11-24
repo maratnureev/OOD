@@ -14,7 +14,6 @@ namespace naive
 			SoldOut,			// Жвачка закончилась
 			NoQuarter,			// Нет монетки
 			HasQuarter,			// Есть монетка
-			FullQuarter,		// Автомат полон монетками
 			Sold,				// Жвачка выдана
 		};
 
@@ -35,14 +34,17 @@ namespace naive
 				break;
 			case State::NoQuarter:
 				m_state = State::HasQuarter;
-			case State::HasQuarter:
 				m_out << "You inserted a quarter\n";
 				m_quartersAmount++;
-				if (m_quartersAmount >= MAX_QUARTERS)
-					m_state = State::FullQuarter;
 				break;
-			case State::FullQuarter:
-				m_out << "You can't insert another quarter\n";
+			case State::HasQuarter:
+				if (m_quartersAmount == MAX_QUARTERS)
+				{
+					m_out << "You can't insert another quarter\n";
+					break;
+				}
+				m_out << "You inserted a quarter\n";
+				m_quartersAmount++;
 				break;
 			case State::Sold:
 				m_out << "Please wait, we're already giving you a gumball\n";
@@ -55,13 +57,10 @@ namespace naive
 			using namespace std;
 			switch (m_state)
 			{
-			case State::FullQuarter:
-				m_state = State::HasQuarter;
 			case State::HasQuarter:
-				m_quartersAmount--;
 				m_out << "Quarter returned\n";
-				if (m_quartersAmount == 0)
-					m_state = State::NoQuarter;
+				m_quartersAmount = 0;
+				m_state = State::NoQuarter;
 				break;
 			case State::NoQuarter:
 				m_out << "You haven't inserted a quarter\n";
@@ -92,8 +91,6 @@ namespace naive
 			case State::NoQuarter:
 				m_out << "You turned but there's no quarter\n";
 				break;
-			case State::FullQuarter:
-				m_state = State::HasQuarter;
 			case State::HasQuarter:
 				m_out << "You turned...\n";
 				m_quartersAmount--;
@@ -111,10 +108,8 @@ namespace naive
 			m_count += numBalls;
 			if (m_count > 0 && m_quartersAmount == 0)
 				m_state = State::NoQuarter;
-			else if (m_count > 0 && m_quartersAmount > 0 && m_quartersAmount < MAX_QUARTERS)
+			else if (m_count > 0 && m_quartersAmount > 0 && m_quartersAmount <= MAX_QUARTERS)
 				m_state = State::HasQuarter;
-			else if (m_count > 0 && m_quartersAmount == MAX_QUARTERS)
-				m_state = State::FullQuarter;
 			else
 				m_state = State::SoldOut;
 		}
@@ -124,8 +119,7 @@ namespace naive
 			std::string state =
 				(m_state == State::SoldOut) ? "sold out" :
 				(m_state == State::NoQuarter) ? "waiting for quarter" :
-				(m_state == State::HasQuarter) ? "waiting for turn of crank or for quarter" :
-				(m_state == State::FullQuarter) ? "waiting for turn of crank"
+				(m_state == State::HasQuarter) ? "waiting for turn of crank" 
 				: "delivering a gumball";
 			return "Mighty Gumball, Inc.\n"
 				"C++-enabled Standing Gumball Model #2016\n"

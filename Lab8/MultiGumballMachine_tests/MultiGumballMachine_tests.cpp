@@ -178,7 +178,7 @@ SCENARIO("test state gumble machine refill from no quarter state")
 	m.Refill(5);
 	REQUIRE(m.ToString() == "Mighty Gumball, Inc.\n"
 		"C++-enabled Standing Gumball Model #2016 (with state)\n"
-		"Inventory: 6 gumballs\n"
+		"Inventory: 5 gumballs\n"
 		"Bank: 0 quarters\n"
 		"Machine is waiting for quarter\n");
 }
@@ -192,13 +192,13 @@ SCENARIO("test state gumble machine refill from has quarter state")
 		"C++-enabled Standing Gumball Model #2016 (with state)\n"
 		"Inventory: 1 gumball\n"
 		"Bank: 1 quarter\n"
-		"Machine is waiting for turn of crank or for quarter\n");
+		"Machine is waiting for turn of crank\n");
 	m.Refill(5);
 	REQUIRE(m.ToString() == "Mighty Gumball, Inc.\n"
 		"C++-enabled Standing Gumball Model #2016 (with state)\n"
-		"Inventory: 6 gumballs\n"
+		"Inventory: 5 gumballs\n"
 		"Bank: 1 quarter\n"
-		"Machine is waiting for turn of crank or for quarter\n");
+		"Machine is waiting for turn of crank\n");
 }
 
 SCENARIO("test state gumble machine refill from full state")
@@ -218,7 +218,7 @@ SCENARIO("test state gumble machine refill from full state")
 	m.Refill(5);
 	REQUIRE(m.ToString() == "Mighty Gumball, Inc.\n"
 		"C++-enabled Standing Gumball Model #2016 (with state)\n"
-		"Inventory: 6 gumballs\n"
+		"Inventory: 5 gumballs\n"
 		"Bank: 5 quarters\n"
 		"Machine is waiting for turn of crank\n");
 }
@@ -243,7 +243,7 @@ SCENARIO("test state gumble machine insert 5 coins and get gumballs")
 		"C++-enabled Standing Gumball Model #2016 (with state)\n"
 		"Inventory: 4 gumballs\n"
 		"Bank: 4 quarters\n"
-		"Machine is waiting for turn of crank or for quarter\n");
+		"Machine is waiting for turn of crank\n");
 	m.TurnCrank();
 	m.TurnCrank();
 	m.TurnCrank();
@@ -449,13 +449,13 @@ SCENARIO("test naive gumble machine refill from has quarter state")
 		"C++-enabled Standing Gumball Model #2016\n"
 		"Inventory: 1 gumball\n"
 		"Bank: 1 quarter\n"
-		"Machine is waiting for turn of crank or for quarter\n");
+		"Machine is waiting for turn of crank\n");
 	m.Refill(5);
 	REQUIRE(m.ToString() == "Mighty Gumball, Inc.\n"
 		"C++-enabled Standing Gumball Model #2016\n"
 		"Inventory: 6 gumballs\n"
 		"Bank: 1 quarter\n"
-		"Machine is waiting for turn of crank or for quarter\n");
+		"Machine is waiting for turn of crank\n");
 }
 
 SCENARIO("test naive gumble machine refill from full state")
@@ -502,7 +502,7 @@ SCENARIO("test naive gumble machine insert 5 coins and get gumballs")
 		"C++-enabled Standing Gumball Model #2016\n"
 		"Inventory: 4 gumballs\n"
 		"Bank: 4 quarters\n"
-		"Machine is waiting for turn of crank or for quarter\n");
+		"Machine is waiting for turn of crank\n");
 	m.TurnCrank();
 	m.TurnCrank();
 	m.TurnCrank();

@@ -8,12 +8,6 @@
 class CGroupShape : public IGroupShape, public std::enable_shared_from_this<CGroupShape>
 {
 public:
-	CGroupShape(std::vector<std::shared_ptr<IShape>>& shapes)
-		:m_shapes(shapes)
-	{
-		if (shapes.size() < 2)
-			throw std::logic_error("Cannot create group less then from 2 elements");
-	}
 	RectD GetFrame() const override;
 	void SetFrame(const RectD& rect) override;
 
@@ -42,6 +36,6 @@ private:
 	std::shared_ptr<IFillStyle> m_groupFillStyle = nullptr;
 	std::shared_ptr<IOutlineStyle> m_groupLineStyle = nullptr;
 	std::vector<std::shared_ptr<IShape>> m_shapes;
-	std::shared_ptr<IGroupShape> m_parent = nullptr;
+	std::shared_ptr<IGroupShape> m_parent = nullptr; //weak_ptr... 
 };
 

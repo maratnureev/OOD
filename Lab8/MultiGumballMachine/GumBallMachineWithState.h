@@ -29,7 +29,6 @@ namespace with_state
 		virtual void SetNoQuarterState() = 0;
 		virtual void SetSoldState() = 0;
 		virtual void SetHasQuarterState() = 0;
-		virtual void SetFullState() = 0;
 
 		virtual ~IGumballMachine() = default;
 	};
@@ -92,7 +91,7 @@ namespace with_state
 			if (m_gumballMachine.GetQuartersAmount() != 0)
 			{
 				m_out << "Returning quarter";
-				m_gumballMachine.DecreaseQuartersAmount();
+				m_gumballMachine.EmptyBank();
 			}
 			else
 				m_out << "You can't eject, you haven't inserted a quarter yet\n";
@@ -124,16 +123,19 @@ namespace with_state
 
 		void InsertQuarter() override
 		{
+			if (m_gumballMachine.GetQuartersAmount() == 5)
+			{
+				m_out << "You can't insert another quarter\n";
+				return;
+			}
 			m_out << "You inserted a quarter\n";
 			m_gumballMachine.IncreaseQuartersAmount();
-			if (m_gumballMachine.GetQuartersAmount() == 5)
-				m_gumballMachine.SetFullState();
 		}
 		void EjectQuarter() override
 		{
 			m_out << "Quarter returned\n";
-			if (m_gumballMachine.GetQuartersAmount() == 0)
-				m_gumballMachine.SetNoQuarterState();
+			m_gumballMachine.EmptyBank();
+			m_gumballMachine.SetNoQuarterState();
 		}
 		void TurnCrank() override
 		{
@@ -147,7 +149,7 @@ namespace with_state
 		}
 		std::string ToString() const override
 		{
-			return "waiting for turn of crank or for quarter";
+			return "waiting for turn of crank";
 		}
 	private:
 		IGumballMachine& m_gumballMachine;
@@ -189,43 +191,6 @@ namespace with_state
 		std::ostream& m_out;
 	};
 
-	class CFullOfQuartersState : public IState
-	{
-	public:
-		CFullOfQuartersState(IGumballMachine& gumballMachine, std::ostream& out)
-			: m_gumballMachine(gumballMachine)
-			, m_out(out)
-		{}
-
-		void InsertQuarter() override
-		{
-			m_out << "You can't insert another quarter\n";
-		}
-		void EjectQuarter() override
-		{
-			m_out << "Quarters returned\n";
-			m_gumballMachine.EmptyBank();
-			m_gumballMachine.SetNoQuarterState();
-		}
-		void TurnCrank() override
-		{
-			m_out << "You turned...\n";
-			m_gumballMachine.DecreaseQuartersAmount();
-			m_gumballMachine.SetSoldState();
-		}
-		void Dispense() override
-		{
-			m_out << "No gumball dispensed\n";
-		}
-		std::string ToString() const override
-		{
-			return "waiting for turn of crank";
-		}
-	private:
-		IGumballMachine& m_gumballMachine;
-		std::ostream& m_out;
-	};
-
 	class CGumballMachine : private IGumballMachine
 	{
 	public:
@@ -234,7 +199,6 @@ namespace with_state
 			, m_soldOutState(*this, out)
 			, m_noQuarterState(*this, out)
 			, m_hasQuarterState(*this, out)
-			, m_fullState(*this, out)
 			, m_state(&m_soldOutState)
 			, m_count(numBalls)
 			, m_out(out)
@@ -270,10 +234,8 @@ namespace with_state
 			m_count = numBalls;
 			if (numBalls > 0 && m_quartersAmount == 0)
 				SetNoQuarterState();
-			else if (numBalls > 0 && m_quartersAmount > 0 && m_quartersAmount < MAX_QUARTERS)
+			else if (numBalls > 0 && m_quartersAmount > 0 && m_quartersAmount <= MAX_QUARTERS)
 				SetHasQuarterState();
-			else if (numBalls > 0 && m_quartersAmount == MAX_QUARTERS)
-				SetFullState();
 			else
 				SetSoldOutState();
 		}
@@ -327,10 +289,6 @@ namespace with_state
 		{
 			m_state = &m_hasQuarterState;
 		}
-		void SetFullState() override
-		{
-			m_state = &m_fullState;
-		}
 	private:
 		unsigned m_count = 0;
 		unsigned m_quartersAmount = 0;
@@ -338,7 +296,6 @@ namespace with_state
 		CSoldOutState m_soldOutState;
 		CNoQuarterState m_noQuarterState;
 		CHasQuarterState m_hasQuarterState;
-		CFullOfQuartersState m_fullState;
 		IState* m_state;
 		std::ostream& m_out;
 	};
