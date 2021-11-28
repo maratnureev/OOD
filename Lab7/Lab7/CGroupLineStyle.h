@@ -4,38 +4,46 @@
 class CGroupLineStyle : public IOutlineStyle
 {
 public:
-	CGroupLineStyle(std::vector<std::shared_ptr<IShape>>& shapes, std::optional<RGBAColor> color, std::optional<double> strokeSize)
+	CGroupLineStyle(std::vector<std::shared_ptr<IShape>>& shapes)
 		:m_shapes(shapes)
-		,m_color(color)
-		,m_strokeSize(strokeSize)
 	{}
 
 	std::optional<RGBAColor> GetColor()const override
 	{
-		return m_color;
+		auto firstElemColor = m_shapes[0]->GetOutlineStyle()->GetColor();
+		bool isLineSizeEqual = true;
+		for (auto shape : m_shapes)
+		{
+			if (firstElemColor != shape->GetOutlineStyle()->GetColor())
+				isLineSizeEqual = false;
+		}
+		return firstElemColor;
 	}
 
 	void SetColor(RGBAColor color) override
 	{
-		m_color = color;
 		for (auto shape : m_shapes)
 			shape->GetOutlineStyle()->SetColor(color);
 	}
 
 	std::optional<double> GetStrokeSize() const override
 	{
-		return m_strokeSize;
+		auto firstElemWidth = m_shapes[0]->GetOutlineStyle()->GetStrokeSize();
+		bool isLineSizeEqual = true;
+		for (auto shape : m_shapes)
+		{
+			if (firstElemWidth != shape->GetOutlineStyle()->GetStrokeSize())
+				isLineSizeEqual = false;
+		}
+		return firstElemWidth;
 	}
 
 	void SetStrokeSize(double size) override
 	{
-		m_strokeSize = size;
 		for (auto shape : m_shapes)
 			shape->GetOutlineStyle()->SetStrokeSize(size);
 	}
 
 private:
 	std::vector<std::shared_ptr<IShape>>& m_shapes;
-	std::optional<RGBAColor> m_color;
-	std::optional<double> m_strokeSize;
 };

@@ -21,8 +21,8 @@ public:
 	std::shared_ptr<IGroupShape> GetGroup() override;
 	std::shared_ptr<const IGroupShape> GetGroup() const override;
 
-	std::shared_ptr<IGroupShape> GetParent() const override;
-	void SetParent(std::shared_ptr<IGroupShape> parent) override;
+	std::weak_ptr<IGroupShape> GetParent() const override;
+	void SetParent(std::weak_ptr<IGroupShape> parent) override;
 
 protected:
 	RectD m_frame;
@@ -30,6 +30,6 @@ protected:
 private:
 	std::shared_ptr<IOutlineStyle> m_outlineStyle = std::make_shared<CLineStyle>();
 	std::shared_ptr<IFillStyle> m_fillStyle = std::make_shared<CFillStyle>();
-	std::shared_ptr<IGroupShape> m_parent;
+	std::weak_ptr<IGroupShape> m_parent;
 };
 

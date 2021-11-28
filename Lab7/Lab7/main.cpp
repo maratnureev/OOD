@@ -29,17 +29,18 @@ int main()
     lake->GetFillStyle()->SetColor(0x46F5F4);
     shared_ptr<IShape> sun = make_shared<CEllipse>(PointD{ 800, 150 }, 100, 100);
     sun->GetFillStyle()->SetColor(0xE7EF32);
+    std::vector<std::shared_ptr<IShape>> shapes;
+    shapes.push_back(ground);
+    shapes.push_back(house);
 
-    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>();
-    picture->InsertShape(ground);
-    picture->InsertShape(house);
+    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>(shapes);
     picture->InsertShape(window);
     picture->InsertShape(roof);
     picture->InsertShape(lake);
     picture->InsertShape(sun);
     //picture->GetFillStyle()->SetColor(0x00FFff);
-    //picture->GetOutlineStyle()->SetColor(0x0000ff);
-    //picture->GetOutlineStyle()->SetStrokeSize(9);
+    picture->GetOutlineStyle()->SetColor(0x0000ff);
+    picture->GetOutlineStyle()->SetStrokeSize(9);
 
     slide.InsertShape(picture);
     RectD frame = picture->GetFrame();

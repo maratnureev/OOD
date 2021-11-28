@@ -47,50 +47,24 @@ void CGroupShape::SetFrame(const RectD& rect)
 
 shared_ptr<IOutlineStyle> CGroupShape::GetOutlineStyle()
 {
-	if (m_shapes.empty())
-		throw logic_error("group is empty");
-	auto firstElemColor = m_shapes[0]->GetOutlineStyle()->GetColor();
-	auto firstElemWidth = m_shapes[0]->GetOutlineStyle()->GetStrokeSize();
-	bool isColorEqual = true;
-	bool isLineSizeEqual = true;
-	for (auto shape : m_shapes)
-	{
-		if (firstElemColor != shape->GetOutlineStyle()->GetColor())
-			isColorEqual = false;
-		if (firstElemWidth != shape->GetOutlineStyle()->GetStrokeSize())
-			isLineSizeEqual = false;
-	}
-	// проверять при получении цвета цвета фигур.
-	shared_ptr<IOutlineStyle>lineStyle = make_shared<CGroupLineStyle>(m_shapes, isColorEqual ? firstElemColor : nullopt, isLineSizeEqual ? firstElemWidth : nullopt);
+	shared_ptr<IOutlineStyle>lineStyle = make_shared<CGroupLineStyle>(m_shapes);
 	m_groupLineStyle = lineStyle;
 	return m_groupLineStyle;
 }
 
-const shared_ptr<IOutlineStyle> CGroupShape::GetOutlineStyle() const
+shared_ptr<const IOutlineStyle> CGroupShape::GetOutlineStyle() const
 {
 	return GetOutlineStyle();
 }
 
 shared_ptr<IFillStyle> CGroupShape::GetFillStyle()
 {
-	if (m_shapes.empty())
-		throw logic_error("group is empty");
-	auto firstElemColor = m_shapes[0]->GetFillStyle()->GetColor();
-	bool isColorEqual = true;
-	for (auto shape : m_shapes)
-	{
-		if (firstElemColor != shape->GetFillStyle()->GetColor())
-		{
-			isColorEqual = false;
-			break;
-		}
-	}
-	shared_ptr<IFillStyle>fillStyle = make_shared<CGroupFillStyle>(m_shapes, isColorEqual ? firstElemColor : nullopt);
+	shared_ptr<IFillStyle>fillStyle = make_shared<CGroupFillStyle>(m_shapes);
 	m_groupFillStyle = fillStyle;
 	return m_groupFillStyle;
 }
 
-const shared_ptr<IFillStyle> CGroupShape::GetFillStyle() const
+shared_ptr<const IFillStyle> CGroupShape::GetFillStyle() const
 {
 	return GetFillStyle();
 }
@@ -118,7 +92,6 @@ size_t CGroupShape::GetShapesCount() const
 
 void CGroupShape::InsertShape(const std::shared_ptr<IShape>& shape, size_t position)
 {
-
 	if (IsParent(shape))
 		throw logic_error("Cannot recursive insert");
 	if (position >= m_shapes.size())
@@ -141,28 +114,29 @@ void CGroupShape::RemoveShapeAtIndex(size_t index)
 	if (index > m_shapes.size())
 		throw logic_error("position is out of bounce");
 	auto it = m_shapes.begin();
-	m_shapes.at(index)->SetParent(nullptr);
 	m_shapes.erase(it + index);
+	if (m_shapes.size() < 2)
+		delete this;
 }
 
-std::shared_ptr<IGroupShape> CGroupShape::GetParent() const
+std::weak_ptr<IGroupShape> CGroupShape::GetParent() const
 {
 	return m_parent;
 }
 
-void CGroupShape::SetParent(std::shared_ptr<IGroupShape> parent)
+void CGroupShape::SetParent(std::weak_ptr<IGroupShape> parent)
 {
 	m_parent = parent;
 }
 
-bool CGroupShape::IsParent(std::shared_ptr<IShape> parent)
+bool CGroupShape::IsParent(std::weak_ptr<IShape> parent)
 {
 	auto currentNode = GetGroup();
 	while (currentNode != nullptr)
 	{
-		if (currentNode == parent)
+		if (currentNode == parent.lock())
 			return true;
-		currentNode = currentNode->GetParent();
+		currentNode = currentNode->GetParent().lock();
 	}
 	return false;
 }
