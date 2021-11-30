@@ -54,10 +54,11 @@ SCENARIO("Test full group creation")
     lake->GetFillStyle()->SetColor(0x46F5F4);
     shared_ptr<IShape> sun = make_shared<CEllipse>(PointD{ 800, 150 }, 100, 100);
     sun->GetFillStyle()->SetColor(0xE7EF32);
+    std::vector<std::shared_ptr<IShape>> shapes;
+    shapes.push_back(ground);
+    shapes.push_back(house);
 
-    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>();
-    picture->InsertShape(ground);
-    picture->InsertShape(house);
+    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>(shapes);
     picture->InsertShape(window);
     picture->InsertShape(roof);
     picture->InsertShape(lake);
@@ -71,19 +72,22 @@ SCENARIO("Test full group creation")
     AssertShapeValid(window, RectD{ 200, 470, 100, 100 }, 0x46F5F4, 0x000000, 0);
 }
 
-SCENARIO("idea")
+SCENARIO("memory leak test")
 {
-    weak_ptr<CShape> parentGroupWeakPtr;
-    weak_ptr<CShape> childShapeWeakPtr;
-    weak_ptr<CShape> childShape2WeakPtr;
+    weak_ptr<IShape> parentGroupWeakPtr;
+    weak_ptr<IShape> childShapeWeakPtr;
+    weak_ptr<IShape> childShape2WeakPtr;
 
     {
-        auto parentGroup = make_shared<Group>(...);
-        auto childShape = make_shared<Rectangle>(...);
-        auto childShape2 = make_shared<Ellipse>(...);
-        // insert childShape and childShape2 into parentGroup
+        shared_ptr<IShape> childShape1 = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
+        shared_ptr<IShape> childShape2 = make_shared<CRectangle>(PointD{ 100, 400 }, 300, 200);
+        std::vector<std::shared_ptr<IShape>> shapes;
+        shapes.push_back(childShape1);
+        shapes.push_back(childShape2);
+
+        shared_ptr<IGroupShape> parentGroup = make_shared<CGroupShape>(shapes);
         parentGroupWeakPtr = parentGroup;
-        childShapeWeakPtr = childShape;
+        childShapeWeakPtr = childShape1;
         childShape2WeakPtr = childShape2;
     }
 
@@ -109,10 +113,11 @@ SCENARIO("Test group resize")
     lake->GetFillStyle()->SetColor(0x46F5F4);
     shared_ptr<IShape> sun = make_shared<CEllipse>(PointD{ 800, 150 }, 100, 100);
     sun->GetFillStyle()->SetColor(0xE7EF32);
+    std::vector<std::shared_ptr<IShape>> shapes;
+    shapes.push_back(ground);
+    shapes.push_back(house);
 
-    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>();
-    picture->InsertShape(ground);
-    picture->InsertShape(house);
+    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>(shapes);
     picture->InsertShape(window);
     picture->InsertShape(roof);
     picture->InsertShape(lake);
@@ -147,9 +152,11 @@ SCENARIO("Test group change color")
     shared_ptr<IShape> sun = make_shared<CEllipse>(PointD{ 800, 150 }, 100, 100);
     sun->GetFillStyle()->SetColor(0xE7EF32);
 
-    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>();
-    picture->InsertShape(ground);
-    picture->InsertShape(house);
+    std::vector<std::shared_ptr<IShape>> shapes;
+    shapes.push_back(ground);
+    shapes.push_back(house);
+
+    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>(shapes);
     picture->InsertShape(window);
     picture->InsertShape(roof);
     picture->InsertShape(lake);
@@ -185,9 +192,11 @@ SCENARIO("Test GetColor with different colors in group")
     shared_ptr<IShape> sun = make_shared<CEllipse>(PointD{ 800, 150 }, 100, 100);
     sun->GetFillStyle()->SetColor(0xE7EF32);
 
-    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>();
-    picture->InsertShape(ground);
-    picture->InsertShape(house);
+    std::vector<std::shared_ptr<IShape>> shapes;
+    shapes.push_back(ground);
+    shapes.push_back(house);
+
+    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>(shapes);
     picture->InsertShape(window);
     picture->InsertShape(roof);
     picture->InsertShape(lake);
@@ -206,10 +215,74 @@ SCENARIO("test recursive insertion")
     shared_ptr<IShape> figure4 = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
     shared_ptr<IShape> figure5 = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
     shared_ptr<IShape> figure6 = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
-    shared_ptr<IGroupShape> group1 = make_shared<CGroupShape>();
-    shared_ptr<IGroupShape> group2 = make_shared<CGroupShape>();
-    shared_ptr<IGroupShape> group3 = make_shared<CGroupShape>();
+    std::vector<std::shared_ptr<IShape>> shapes1;
+    std::vector<std::shared_ptr<IShape>> shapes2;
+    std::vector<std::shared_ptr<IShape>> shapes3;
+    shapes1.push_back(figure1);
+    shapes1.push_back(figure2);
+    shapes2.push_back(figure3);
+    shapes2.push_back(figure4);
+    shapes3.push_back(figure5);
+    shapes3.push_back(figure6);
+    shared_ptr<IGroupShape> group1 = make_shared<CGroupShape>(shapes1);
+    shared_ptr<IGroupShape> group2 = make_shared<CGroupShape>(shapes2);
+    shared_ptr<IGroupShape> group3 = make_shared<CGroupShape>(shapes3);
     REQUIRE_NOTHROW(group1->InsertShape(group2));
     REQUIRE_NOTHROW(group2->InsertShape(group3));
     REQUIRE_THROWS(group3->InsertShape(group1));
+}
+
+SCENARIO("test remove all elements from group")
+{
+    ostringstream strm;
+    CCanvas canvas(strm);
+    canvas.BeginDraw();
+    shared_ptr<IShape> ground = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
+    ground->GetFillStyle()->SetColor(0x524E2A);
+    shared_ptr<IShape> house = make_shared<CRectangle>(PointD{ 100, 400 }, 300, 200);
+    house->GetFillStyle()->SetColor(0x793119);
+
+    std::vector<std::shared_ptr<IShape>> shapes;
+    shapes.push_back(ground);
+    shapes.push_back(house);
+
+    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>(shapes);
+    picture->RemoveShapeAtIndex(1);
+    REQUIRE_THROWS(picture->RemoveShapeAtIndex(0));
+}
+
+SCENARIO("test insert nullptr")
+{
+    ostringstream strm;
+    CCanvas canvas(strm);
+    canvas.BeginDraw();
+    shared_ptr<IShape> ground = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
+    ground->GetFillStyle()->SetColor(0x524E2A);
+    shared_ptr<IShape> house = make_shared<CRectangle>(PointD{ 100, 400 }, 300, 200);
+    house->GetFillStyle()->SetColor(0x793119);
+
+    std::vector<std::shared_ptr<IShape>> shapes;
+    shapes.push_back(ground);
+    shapes.push_back(house);
+
+    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>(shapes);
+    REQUIRE_THROWS(picture->InsertShape(nullptr));
+}
+
+SCENARIO("test remove element out of bounce")
+{
+    ostringstream strm;
+    CCanvas canvas(strm);
+    canvas.BeginDraw();
+    shared_ptr<IShape> ground = make_shared<CRectangle>(PointD{ 0, 600 }, 1200, 500);
+    ground->GetFillStyle()->SetColor(0x524E2A);
+    shared_ptr<IShape> house = make_shared<CRectangle>(PointD{ 100, 400 }, 300, 200);
+    house->GetFillStyle()->SetColor(0x793119);
+
+    std::vector<std::shared_ptr<IShape>> shapes;
+    shapes.push_back(ground);
+    shapes.push_back(house);
+
+    shared_ptr<IGroupShape> picture = make_shared<CGroupShape>(shapes);
+    REQUIRE_THROWS(picture->RemoveShapeAtIndex(4));
 }

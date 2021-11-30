@@ -13,19 +13,18 @@ public:
 
 	std::optional<RGBAColor> GetColor()const override
 	{
-		auto firstElemColor = m_shapes[0]->GetOutlineStyle()->GetColor();
-		bool isLineSizeEqual = true;
-		for (auto shape : m_shapes)
+		std::optional<RGBAColor> firstElemColor = m_shapes.back()->GetFillStyle()->GetColor();
+		for (auto& shape : m_shapes)
 		{
-			if (firstElemColor != shape->GetOutlineStyle()->GetColor())
-				isLineSizeEqual = false;
+			if (firstElemColor != shape->GetFillStyle()->GetColor())
+				return std::nullopt;
 		}
 		return firstElemColor;
 	}
 
 	void SetColor(RGBAColor color) override
 	{
-		for (auto shape : m_shapes)
+		for (auto& shape : m_shapes)
 			shape->GetFillStyle()->SetColor(color);
 	}
 

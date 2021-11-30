@@ -143,13 +143,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Lab7\CCanvas.cpp" />
-    <ClCompile Include="..\Lab7\CEllipse.cpp" />
     <ClCompile Include="..\Lab7\CGroupShape.cpp" />
     <ClCompile Include="..\Lab7\CRectangle.cpp" />
     <ClCompile Include="..\Lab7\CShape.cpp" />
     <ClCompile Include="..\Lab7\CSlide.cpp" />
-    <ClCompile Include="..\Lab7\CTriangle.cpp" />
     <ClCompile Include="Lab7_tests.cpp" />
   </ItemGroup>
   <ItemGroup>

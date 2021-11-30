@@ -8,11 +8,18 @@
 class CGroupShape : public IGroupShape, public std::enable_shared_from_this<CGroupShape>
 {
 public:
-	CGroupShape(std::vector<std::shared_ptr<IShape>>& shapes)
-		:m_shapes(shapes)
+	CGroupShape(std::vector<std::shared_ptr<IShape>> shapes)
+		:m_shapes(std::move(shapes))
 	{
 		if (shapes.size() < 2)
 			throw std::logic_error("Cannot create group less then from 2 elements");
+	}
+
+	static std::shared_ptr<CGroupShape> Create(std::vector<std::shared_ptr<IShape>> shapes)
+	{
+		auto shape = std::make_shared<CGroupShape>(std::move(shapes));
+		// TODO: adopt chidren
+		return shape;
 	}
 
 	RectD GetFrame() const override;

@@ -1,5 +1,13 @@
 #pragma once
 #include "IStyle.h"
+#include <functional>
+
+class IOutlineStyleEnumerator
+{
+public:
+	virtual void EnumerateOutlineStyles(const std::function<bool(IOutlineStyle& style)>& callback) const = 0;
+};
+
 
 class CGroupLineStyle : public IOutlineStyle
 {
@@ -11,36 +19,34 @@ public:
 	std::optional<RGBAColor> GetColor()const override
 	{
 		auto firstElemColor = m_shapes[0]->GetOutlineStyle()->GetColor();
-		bool isLineSizeEqual = true;
-		for (auto shape : m_shapes)
+		for (auto& shape : m_shapes)
 		{
 			if (firstElemColor != shape->GetOutlineStyle()->GetColor())
-				isLineSizeEqual = false;
+				return std::nullopt;
 		}
 		return firstElemColor;
 	}
 
 	void SetColor(RGBAColor color) override
 	{
-		for (auto shape : m_shapes)
+		for (auto& shape : m_shapes)
 			shape->GetOutlineStyle()->SetColor(color);
 	}
 
 	std::optional<double> GetStrokeSize() const override
 	{
 		auto firstElemWidth = m_shapes[0]->GetOutlineStyle()->GetStrokeSize();
-		bool isLineSizeEqual = true;
-		for (auto shape : m_shapes)
+		for (auto& shape : m_shapes)
 		{
 			if (firstElemWidth != shape->GetOutlineStyle()->GetStrokeSize())
-				isLineSizeEqual = false;
+				return std::nullopt;
 		}
 		return firstElemWidth;
 	}
 
 	void SetStrokeSize(double size) override
 	{
-		for (auto shape : m_shapes)
+		for (auto& shape : m_shapes)
 			shape->GetOutlineStyle()->SetStrokeSize(size);
 	}
 

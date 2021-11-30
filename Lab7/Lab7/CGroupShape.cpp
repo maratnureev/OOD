@@ -6,13 +6,11 @@ using namespace std;
 
 RectD CGroupShape::GetFrame() const
 {
-	if (m_shapes.empty())
-		throw logic_error("group is empty");
 	std::vector<double> leftXCoords;
 	std::vector<double> topYCoords;
 	std::vector<double> rightXCoords;
 	std::vector<double> bottomYCoords;
-	for (auto shape : m_shapes)
+	for (auto& shape : m_shapes)
 	{
 		leftXCoords.push_back(shape->GetFrame().left);
 		topYCoords.push_back(shape->GetFrame().top);
@@ -30,14 +28,12 @@ RectD CGroupShape::GetFrame() const
 
 void CGroupShape::SetFrame(const RectD& rect)
 {
-	if (m_shapes.empty())
-		return;
 	auto oldFrame = GetFrame();
 	auto widthRatio = rect.width / oldFrame.width;
 	auto heightRation = rect.height / oldFrame.height;
 	auto leftOffset = oldFrame.left - rect.left;
 	auto topOffset = oldFrame.top - rect.top;
-	for (auto shape : m_shapes)
+	for (auto& shape : m_shapes)
 	{
 		auto shapeFrame = shape->GetFrame();
 		auto newFrame = RectD{ widthRatio*(shapeFrame.left + leftOffset), heightRation * (shapeFrame.top + topOffset), shapeFrame.width * widthRatio, shapeFrame.height * heightRation };
@@ -92,6 +88,8 @@ size_t CGroupShape::GetShapesCount() const
 
 void CGroupShape::InsertShape(const std::shared_ptr<IShape>& shape, size_t position)
 {
+	if (shape == nullptr)
+		throw logic_error("Invalid shape");
 	if (IsParent(shape))
 		throw logic_error("Cannot recursive insert");
 	if (position >= m_shapes.size())
@@ -113,10 +111,10 @@ void CGroupShape::RemoveShapeAtIndex(size_t index)
 {
 	if (index > m_shapes.size())
 		throw logic_error("position is out of bounce");
+	if (m_shapes.size() == 1)
+		throw logic_error("can not remove last group element");
 	auto it = m_shapes.begin();
 	m_shapes.erase(it + index);
-	if (m_shapes.size() < 2)
-		delete this;
 }
 
 std::weak_ptr<IGroupShape> CGroupShape::GetParent() const
@@ -126,7 +124,7 @@ std::weak_ptr<IGroupShape> CGroupShape::GetParent() const
 
 void CGroupShape::SetParent(std::weak_ptr<IGroupShape> parent)
 {
-	m_parent = parent;
+	m_parent = std::move(parent);
 }
 
 bool CGroupShape::IsParent(std::weak_ptr<IShape> parent)

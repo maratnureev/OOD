@@ -143,12 +143,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CCanvas.cpp" />
-    <ClCompile Include="CEllipse.cpp" />
     <ClCompile Include="CGroupShape.cpp" />
     <ClCompile Include="CShape.cpp" />
     <ClCompile Include="CSlide.cpp" />
-    <ClCompile Include="CTriangle.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,8 @@ size_t CSlide::GetShapesCount() const
 
 void CSlide::InsertShape(const std::shared_ptr<IShape>& shape, size_t position)
 {
+	if (shape == nullptr)
+		throw logic_error("Invalid shape");
 	if (position >= m_shapes.size())
 		m_shapes.push_back(shape);
 	else
@@ -43,6 +45,6 @@ void CSlide::RemoveShapeAtIndex(size_t index)
 
 void CSlide::Draw(ICanvas& canvas) const
 {
-	for (auto shape : m_shapes)
+	for (auto& shape : m_shapes)
 		shape->Draw(canvas);
 }
