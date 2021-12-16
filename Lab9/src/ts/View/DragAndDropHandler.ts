@@ -29,7 +29,12 @@ class DragAndDropHandler {
         window.onmouseup = null
     }
 
+    private static valueOutOfRange(value: number, min: number, max:number) {
+         return (value < min) || (value > max)
+    }
+
     private onShapeMove(e: MouseEvent, leftOffset: number, topOffset: number) {
+        const canvasBounds = this.m_canvas.getBoundingClientRect()
         this.m_controller.setFrame(
             e.x - leftOffset,
             e.y - topOffset,
