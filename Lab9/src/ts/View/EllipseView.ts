@@ -1,9 +1,10 @@
 import { Shape } from "../Model/Shape";
 import { ShapeView } from "./ShapeView";
+import {CanvasView} from "./CanvasView";
 
 class EllipseView extends ShapeView
 {
-    constructor(model: Shape, canvas: HTMLElement) {
+    constructor(model: Shape, canvas: CanvasView) {
         super(model, canvas)
     }
     getShapeHtmlImpl(): string {
