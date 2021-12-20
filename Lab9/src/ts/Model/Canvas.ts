@@ -1,4 +1,4 @@
-import {ISignal, Signal} from "../Signal";
+import {IEvent, Event} from "../Event";
 import {Shape} from "./Shape";
 
 class Canvas {
@@ -8,8 +8,8 @@ class Canvas {
     private readonly m_top: number
     private m_selectedShapeId: number|null
     private m_shapes: Map<number, Shape> = new Map
-    private onSelectedShapeChanged: ISignal<number|null> = new Signal<number|null>()
-    private onShapesChanged: ISignal<number> = new Signal<number>()
+    private onSelectedShapeChanged: IEvent<number|null> = new Event<number|null>()
+    private onShapesChanged: IEvent<number> = new Event<number>()
 
     constructor (width: number, height: number, left: number, top: number) {
         this.m_left = left

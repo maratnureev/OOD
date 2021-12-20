@@ -40,7 +40,6 @@ class CanvasView {
     }
 
     render(parentElement: HTMLElement) {
-        this.m_canvas.innerHTML = ''
         const onShapeSelectedCallback = (e: MouseEvent) => {
             if (!e.defaultPrevented) {
                 this.m_controller.selectShape(null)

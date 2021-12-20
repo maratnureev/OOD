@@ -24,9 +24,9 @@ class EditorView {
         this.m_canvasModel = new Canvas(DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT, left, top)
         this.m_canvasView = new CanvasView(this.m_canvasModel)
         this.m_toolbarView = new ToolbarView(
-            () => this.createRectangle(),
-            () => this.createTriangle(),
-            () => this.createEllipse(),
+            () => this.createShape(ShapeType.Rectangle),
+            () => this.createShape(ShapeType.Triangle),
+            () => this.createShape(ShapeType.Ellipse),
             () => this.deleteShape()
         )
     }
@@ -36,38 +36,10 @@ class EditorView {
         this.m_canvasView.render(this.m_editor)
     }
 
-    private createRectangle() {
+    private createShape(type: ShapeType) {
         const shape: Shape = new Shape(
             this.m_shapeIdCounter++,
-            ShapeType.Rectangle,
-            (this.m_canvasModel.getWidth() - DEFAULT_SHAPE_WIDTH) / 2,
-            (this.m_canvasModel.getHeight() - DEFAULT_SHAPE_HEIGHT) / 2,
-            DEFAULT_SHAPE_WIDTH,
-            DEFAULT_SHAPE_HEIGHT,
-            this.m_canvasModel
-        )
-        this.m_canvasView.addShape(shape)
-        this.render()
-    }
-
-    private createEllipse() {
-        const shape: Shape = new Shape(
-            this.m_shapeIdCounter++,
-            ShapeType.Ellipse,
-            (this.m_canvasModel.getWidth() - DEFAULT_SHAPE_WIDTH) / 2,
-            (this.m_canvasModel.getHeight() - DEFAULT_SHAPE_HEIGHT) / 2,
-            DEFAULT_SHAPE_WIDTH,
-            DEFAULT_SHAPE_HEIGHT,
-            this.m_canvasModel
-        )
-        this.m_canvasView.addShape(shape)
-        this.render()
-    }
-
-    private createTriangle() {
-        const shape: Shape = new Shape(
-            this.m_shapeIdCounter++,
-            ShapeType.Triangle,
+            type,
             (this.m_canvasModel.getWidth() - DEFAULT_SHAPE_WIDTH) / 2,
             (this.m_canvasModel.getHeight() - DEFAULT_SHAPE_HEIGHT) / 2,
             DEFAULT_SHAPE_WIDTH,

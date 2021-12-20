@@ -1,9 +1,9 @@
-import {ISignal, Signal} from "../Signal";
+import {IEvent, Event} from "../Event";
 
 class ButtonView {
     private buttonHTML = document.createElement('button')
     private readonly m_text: string
-    private onClickSignal: ISignal<void> = new Signal<void>()
+    private onClickSignal: IEvent<void> = new Event<void>()
 
     constructor(text: string, cssClass: string) {
         this.m_text = text

@@ -1,6 +1,6 @@
 import {ShapeController} from "../Controller/ShapeController";
 import {Shape} from "../Model/Shape";
-import {ISignal, Signal} from "../Signal";
+import {IEvent, Event} from "../Event";
 import {CanvasView} from "./CanvasView";
 
 class DragAndDropHandler {
@@ -8,7 +8,7 @@ class DragAndDropHandler {
     private readonly m_model: Shape
     private m_canvas: CanvasView
     private m_element: HTMLElement
-    private m_shapeSelected: ISignal<void> = new Signal()
+    private m_shapeSelected: IEvent<void> = new Event()
     private m_mouseMovedCallback: (e:MouseEvent) => void = () => {}
     private m_mouseUpCallback: () => void = () => {}
 
@@ -32,12 +32,7 @@ class DragAndDropHandler {
         window.removeEventListener('mouseup', this.m_mouseUpCallback)
     }
 
-    private static valueOutOfRange(value: number, min: number, max:number) {
-         return (value < min) || (value > max)
-    }
-
     private onShapeMove(e: MouseEvent, leftOffset: number, topOffset: number) {
-        const canvasBounds = this.m_canvas.getBoundingClientRect()
         this.m_controller.setFrame(
             e.x - leftOffset,
             e.y - topOffset,

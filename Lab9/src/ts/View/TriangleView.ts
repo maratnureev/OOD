@@ -7,7 +7,7 @@ class TriangleView extends ShapeView
     constructor(model: Shape, canvas: CanvasView) {
         super(model, canvas)
     }
-    getShapeHtmlImpl(): string {
+    getShapeSVG(): string {
         const model = this.getModel()
         const width = model.getWidth()
         const height = model.getHeight()

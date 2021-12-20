@@ -1,9 +1,10 @@
 import { Shape } from "../Model/Shape";
 import { ShapeController } from "../Controller/ShapeController";
 import { DragAndDropHandler } from "./DragAndDropHandler";
-import { ResizeHandler } from "./ResizeHandler";
-import {ISignal, Signal} from "../Signal";
+import {IEvent, Event} from "../Event";
 import {CanvasView} from "./CanvasView";
+
+const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
 
 abstract class ShapeView
 {
@@ -12,7 +13,7 @@ abstract class ShapeView
     private readonly m_canvas: CanvasView
     private m_dragAndDropHandler: DragAndDropHandler
     private m_element: HTMLElement = document.createElement('div');
-    private m_shapeSelected: ISignal<number> = new Signal()
+    private m_shapeSelected: IEvent<number> = new Event()
 
     protected constructor(model: Shape, canvas: CanvasView) {
         this.m_model = model
@@ -25,7 +26,7 @@ abstract class ShapeView
         })
     }
 
-    abstract getShapeHtmlImpl(): string
+    abstract getShapeSVG(): string
 
     getModel() {
         return this.m_model
@@ -54,16 +55,10 @@ abstract class ShapeView
         this.m_element.style.width = `${width}px`
         this.m_element.style.height = `${height}px`
         this.m_element.style.position = 'absolute'
-        const svg = this.m_element.getElementsByTagName('svg')[0]
-        if (svg) {
-            svg.outerHTML = this.getShapeHtmlImpl()
-        } else {
-            this.m_element.innerHTML = this.getShapeHtmlImpl()
-        }
+        this.m_element.innerHTML = this.getShapeSVG()
     }
 
     render(parentElement: HTMLElement) {
-        this.m_element.innerHTML = ''
         this.m_element.remove()
         this.resize()
         this.m_element.onmousedown = e => this.m_dragAndDropHandler.handle(e)
@@ -77,4 +72,5 @@ abstract class ShapeView
 
 export {
     ShapeView,
+    SVG_NAMESPACE
 }

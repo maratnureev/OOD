@@ -1,5 +1,5 @@
 
-abstract class ISignal<T> {
+abstract class IEvent<T> {
     abstract add(fn: (value: T) => void): () => void
 
     abstract addCallOnce(fn: (value: T) => void): void
@@ -7,7 +7,7 @@ abstract class ISignal<T> {
     abstract dispatch(value: T): void
 }
 
-class Signal<T> {
+class Event<T> {
     private m_listeners: Array<(value: T) => void> = []
 
     public add(fn: (value: T) => void): () => void {
@@ -36,6 +36,6 @@ class Signal<T> {
 }
 
 export {
-    ISignal,
-    Signal,
+    IEvent,
+    Event,
 }

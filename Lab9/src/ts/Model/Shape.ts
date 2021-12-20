@@ -1,4 +1,4 @@
-import {ISignal, Signal} from "../Signal";
+import {IEvent, Event} from "../Event";
 import {ShapeType} from "./ShapeType";
 import {Canvas} from "./Canvas";
 
@@ -11,7 +11,7 @@ class Shape
     private m_height: number
     private m_top: number
     private m_canvas: Canvas
-    private onFrameChanged: ISignal<void> = new Signal<void>()
+    private onFrameChanged: IEvent<void> = new Event<void>()
 
     constructor (id: number, type: ShapeType, left: number, top: number, width: number, height: number, canvas: Canvas) {
         this.m_canvas = canvas
