@@ -72,11 +72,13 @@ class ResizeHandler {
         window.removeEventListener('mouseup', this.m_onMouseUpCallback)
     }
 
+    // константы для типов
     private onMouseMove(e: MouseEvent, type: HandlerType, shapeView: ShapeView) {
         const canvasBounds = this.m_canvas.getCanvasBounders()
         const shape = shapeView.getModel()
         const mouseLeft = e.x - canvasBounds.left
         const mouseTop = e.y - canvasBounds.top
+        // выделить контроллер
         switch (type) {
             case "leftTop":
                 shapeView.setFrame(

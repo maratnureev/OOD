@@ -26,6 +26,7 @@ class SelectionView {
         }
     }
 
+    //Предавать Shape 
     selectShape(selectedShape: ShapeView) {
         const shape = selectedShape.getModel()
         this.m_onFrameChangeUnsubscribe = shape.getOnFrameChanged().add(() => this.resizeSelector(shape))

@@ -35,6 +35,8 @@ class Shape
     getHeight() {
         return this.m_height
     }
+
+    // этой логике здесь не место. Вынести параметры во Frame 
     setFrame(left: number, top: number, width: number, height: number) {
         const right = Math.min(Math.max(left + width, width), this.m_canvas.getWidth())
         const bottom = Math.min(Math.max(top + height, height), this.m_canvas.getHeight())

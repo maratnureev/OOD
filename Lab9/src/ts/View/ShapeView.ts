@@ -20,13 +20,14 @@ abstract class ShapeView
         this.m_controller = new ShapeController(model, this)
         this.m_canvas = canvas
         this.m_dragAndDropHandler = new DragAndDropHandler(this.m_model, this.m_canvas, this.m_controller, this.m_element)
+        // При undo/redo отписываться от события
         this.m_model.getOnFrameChanged().add(() => this.resize())
         this.m_dragAndDropHandler.getShapeSelected().add(() => {
             this.m_shapeSelected.dispatch(this.m_model.getId())
         })
     }
 
-    abstract getShapeSVG(): string
+    abstract getShapeSVG(): string //protected
 
     getModel() {
         return this.m_model

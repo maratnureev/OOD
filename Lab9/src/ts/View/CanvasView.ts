@@ -15,6 +15,8 @@ class CanvasView {
     private m_shapeViews: Map<number, ShapeView> = new Map()
     private m_selectionView: SelectionView
 
+
+    // Синхронизировать модель со view
     constructor(model: Canvas) {
         this.m_model = model
         this.m_controller = new CanvasController(model, this)
@@ -23,7 +25,7 @@ class CanvasView {
         this.m_canvas.classList.add('canvas')
         this.m_canvas.style.width = `${this.m_model.getWidth()}px`
         this.m_canvas.style.height = `${this.m_model.getHeight()}px`
-        this.m_canvas.style.left = `${this.m_model.getLeft()}px`
+        this.m_canvas.style.left = `${this.m_model.getLeft()}px` //Убрать координаты left, top в модели 
         this.m_canvas.style.top = `${this.m_model.getTop()}px`
         this.m_model.getOnShapesChanged().add(
             (shapeId) => this.onShapeChanged(shapeId)
@@ -36,9 +38,11 @@ class CanvasView {
                 this.deleteShape()
             }
         }
-        window.addEventListener('keydown', onDeleteButtonPressed)
+        this.m_canvas.addEventListener('keydown', onDeleteButtonPressed) // Подписываться на событие не для окна
     }
 
+
+    //render можно вызвать несколько раз
     render(parentElement: HTMLElement) {
         const onShapeSelectedCallback = (e: MouseEvent) => {
             if (!e.defaultPrevented) {
@@ -54,10 +58,12 @@ class CanvasView {
         )
     }
 
+    // Сделать контроллер для меню
     addShape(shape: Shape) {
         this.m_controller.addShape(shape)
     }
 
+    // Сделать контроллер для меню
     deleteShape() {
         const selectedShapeId = this.m_model.getSelectedShapeId()
         if (selectedShapeId !== null) {
@@ -85,6 +91,8 @@ class CanvasView {
         }
     }
 
+
+    //Выделить в 2 события
     private onShapeChanged(shapeId: number) {
         const shape = this.m_model.getShapeById(shapeId)
         const shapeView = this.m_shapeViews.get(shapeId)

@@ -3,6 +3,8 @@ import {Shape} from "../Model/Shape";
 import {IEvent, Event} from "../Event";
 import {CanvasView} from "./CanvasView";
 
+
+// Передавать HTMLelement вместо канваса
 class DragAndDropHandler {
     private readonly m_controller: ShapeController
     private readonly m_model: Shape
