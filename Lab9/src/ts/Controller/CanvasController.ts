@@ -1,6 +1,5 @@
 import {Canvas} from "../Model/Canvas";
 import {CanvasView} from "../View/CanvasView";
-import {Shape} from "../Model/Shape";
 
 class CanvasController
 {
@@ -11,15 +10,7 @@ class CanvasController
         this.m_view = view
     }
 
-    addShape(shape: Shape) {
-        this.m_model.addShape(shape)
-    }
-
-    removeShape(shapeId: number) {
-        this.m_model.removeShape(shapeId)
-    }
-
-    selectShape(shapeId: number|null) {
+    selectShape(shapeId: string|null) {
         this.m_model.selectShape(shapeId)
     }
 }

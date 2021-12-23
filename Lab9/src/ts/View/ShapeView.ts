@@ -4,41 +4,35 @@ import { DragAndDropHandler } from "./DragAndDropHandler";
 import {IEvent, Event} from "../Event";
 import {CanvasView} from "./CanvasView";
 
-const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
-
 abstract class ShapeView
 {
-    private readonly m_model: Shape
+    private readonly m_shape: Shape
     private readonly m_controller: ShapeController
-    private readonly m_canvas: CanvasView
+    private readonly parentElement: HTMLElement
     private m_dragAndDropHandler: DragAndDropHandler
     private m_element: HTMLElement = document.createElement('div');
-    private m_shapeSelected: IEvent<number> = new Event()
+    private m_shapeSelected: IEvent<string> = new Event()
 
-    protected constructor(model: Shape, canvas: CanvasView) {
-        this.m_model = model
-        this.m_controller = new ShapeController(model, this)
-        this.m_canvas = canvas
-        this.m_dragAndDropHandler = new DragAndDropHandler(this.m_model, this.m_canvas, this.m_controller, this.m_element)
+    protected constructor(shape: Shape, parentElement: HTMLElement) {
+        this.m_shape = shape
+        this.m_controller = new ShapeController(shape)
+        this.parentElement = parentElement
+        this.m_dragAndDropHandler = new DragAndDropHandler(this.m_shape, this.parentElement, this.m_controller, this.m_element)
         // При undo/redo отписываться от события
-        this.m_model.getOnFrameChanged().add(() => this.resize())
+        this.m_shape.getOnFrameChanged().add(() => this.resize())
         this.m_dragAndDropHandler.getShapeSelected().add(() => {
-            this.m_shapeSelected.dispatch(this.m_model.getId())
+            this.m_shapeSelected.dispatch(this.m_shape.getId())
         })
     }
 
-    abstract getShapeSVG(): string //protected
+    protected abstract getShapeSVG(): string
 
     getModel() {
-        return this.m_model
+        return this.m_shape
     }
 
     getShapeSelected() {
         return this.m_shapeSelected
-    }
-
-    getDOMElement() {
-        return this.m_element
     }
 
     remove() {
@@ -46,15 +40,12 @@ abstract class ShapeView
     }
 
     resize() {
-        const left = this.m_model.getLeft()
-        const top = this.m_model.getTop()
-        const width = this.m_model.getWidth()
-        const height = this.m_model.getHeight()
+        const frame = this.m_shape.getFrame()
 
-        this.m_element.style.left = `${left}px`
-        this.m_element.style.top = `${top}px`
-        this.m_element.style.width = `${width}px`
-        this.m_element.style.height = `${height}px`
+        this.m_element.style.left = `${frame.left}px`
+        this.m_element.style.top = `${frame.top}px`
+        this.m_element.style.width = `${frame.width}px`
+        this.m_element.style.height = `${frame.height}px`
         this.m_element.style.position = 'absolute'
         this.m_element.innerHTML = this.getShapeSVG()
     }
@@ -65,13 +56,8 @@ abstract class ShapeView
         this.m_element.onmousedown = e => this.m_dragAndDropHandler.handle(e)
         parentElement.appendChild(this.m_element)
     }
-
-    setFrame(left: number, top: number, width: number, height: number) {
-        this.m_controller.setFrame(left, top, width, height)
-    }
 }
 
 export {
-    ShapeView,
-    SVG_NAMESPACE
+    ShapeView
 }

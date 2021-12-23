@@ -1,26 +1,27 @@
 import {IEvent, Event} from "../Event";
-import {Shape} from "./Shape";
+import {SerializedShape, Shape} from "./Shape";
 
 class Canvas {
     private readonly m_width: number
     private readonly m_height: number
-    private readonly m_left: number
-    private readonly m_top: number
-    private m_selectedShapeId: number|null
-    private m_shapes: Map<number, Shape> = new Map
-    private onSelectedShapeChanged: IEvent<number|null> = new Event<number|null>()
-    private onShapesChanged: IEvent<number> = new Event<number>()
+    private m_selectedShapeId: string|null
+    private m_shapes: Map<string, Shape> = new Map
+    private onSelectedShapeChanged: IEvent<string|null> = new Event<string|null>()
+    private onShapeAdded: IEvent<string> = new Event<string>()
+    private onShapeRemoved: IEvent<string> = new Event<string>()
 
-    constructor (width: number, height: number, left: number, top: number) {
-        this.m_left = left
-        this.m_top = top
+    constructor (width: number, height: number) {
         this.m_width = width
         this.m_height = height
         this.m_selectedShapeId = null
     }
 
-    getOnShapesChanged() {
-        return this.onShapesChanged
+    getOnShapeAdded() {
+        return this.onShapeAdded
+    }
+
+    getOnShapeRemoved() {
+        return this.onShapeRemoved
     }
 
     getOnSelectedShapeChanged() {
@@ -35,38 +36,53 @@ class Canvas {
         return this.m_height
     }
 
-    getLeft() {
-        return this.m_left
-    }
-
-    getTop() {
-        return this.m_top
-    }
-
     addShape(shape: Shape) {
         this.m_shapes.set(shape.getId(), shape)
-        this.onShapesChanged.dispatch(shape.getId())
+        this.onShapeAdded.dispatch(shape.getId())
     }
 
-    getShapeById(shapeId: number) {
+    getShapeById(shapeId: string) {
         return this.m_shapes.get(shapeId)
     }
 
-    selectShape(shapeId: number|null) {
+    selectShape(shapeId: string|null) {
         this.m_selectedShapeId = shapeId
         this.onSelectedShapeChanged.dispatch(shapeId)
     }
 
-    removeShape(shapeId: number) {
+    removeShape(shapeId: string) {
         this.m_shapes.delete(shapeId)
-        this.onShapesChanged.dispatch(shapeId)
+        this.onShapeRemoved.dispatch(shapeId)
     }
 
     getSelectedShapeId() {
         return this.m_selectedShapeId
     }
+
+    getShapeIds() {
+        return Array.from(this.m_shapes.keys())
+    }
+
+    getShapes() {
+        return Array.from(this.m_shapes.values())
+    }
+
+    serialize() {
+        return {
+            width: this.m_width,
+            height: this.m_height,
+            shapes: this.getShapes().map(shape => shape.serialize()),
+        }
+    }
+}
+
+type SerializedCanvas = {
+    width: number
+    height: number
+    shapes: SerializedShape[]
 }
 
 export {
     Canvas
-}
+};
+export type { SerializedCanvas };

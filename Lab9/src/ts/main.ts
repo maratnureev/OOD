@@ -1,8 +1,7 @@
-import {EditorView} from "./View/EditorView";
+import {Editor} from "./View/Editor";
 
 function startApp() {
-    const editorRenderer = new EditorView()
-    editorRenderer.render()
+    const editorRenderer = new Editor()
 }
 
 window.onload = () => {

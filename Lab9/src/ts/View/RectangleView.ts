@@ -4,19 +4,18 @@ import {CanvasView} from "./CanvasView";
 
 class RectangleView extends ShapeView
 {
-    constructor(model: Shape, canvas: CanvasView) {
-        super(model, canvas)
+    constructor(model: Shape, parentElement: HTMLElement) {
+        super(model, parentElement)
     }
-    getShapeSVG(): string {
+    protected getShapeSVG(): string {
         const model = this.getModel()
-        const width = model.getWidth()
-        const height = model.getHeight()
+        const frame = model.getFrame()
         return `<svg
             xmlns='http://www.w3.org/2000/svg'
-            width='${width}'
-            height='${height}'
-            viewPort='0 0 ${width} ${height}'>"
-            <polygon points='${0},${0} ${width},${0} ${width},${height} ${0},${height}' fill='brown' />
+            width='${frame.width}'
+            height='${frame.height}'
+            viewPort='0 0 ${frame.width} ${frame.height}'>"
+            <polygon points='${0},${0} ${frame.width},${0} ${frame.width},${frame.height} ${0},${frame.height}' fill='brown' />
         </svg>`
     }
 }

@@ -1,24 +1,30 @@
-import {CanvasView} from "./CanvasView";
 import {ShapeView} from "./ShapeView";
+import {Shape} from "../Model/Shape";
+import {SelectionController} from "../Controller/SelectionController";
 
-type HandlerType = 'leftTop' | 'rightTop' | 'leftBottom' | 'rightBottom'
+const LEFT_TOP_HANDLER_TYPE = 'leftTop'
+const LEFT_BOTTOM_HANDLER_TYPE = 'leftBottom'
+const RIGHT_TOP_HANDLER_TYPE = 'rightTop'
+const RIGHT_BOTTOM_HANDLER_TYPE = 'rightBottom'
 
 class ResizeHandler {
     private readonly m_element: HTMLElement
-    private m_canvas: CanvasView
+    private m_parentElement: HTMLElement
+    private m_controller: SelectionController
     private m_onMouseMoveCallback: (e: MouseEvent) => void = () => {}
     private m_onMouseUpCallback: () => void = () => {}
 
-    constructor(canvas: CanvasView, element: HTMLElement) {
-        this.m_canvas = canvas
-        this.m_element = element;
+    constructor(parentElement: HTMLElement, element: HTMLElement, controller: SelectionController) {
+        this.m_parentElement = parentElement
+        this.m_element = element
+        this.m_controller = controller
     }
 
-    public handle(shapeView: ShapeView) {
-        this.addResizeHandlers(this.m_element, shapeView)
+    public handle(shape: Shape) {
+        this.addResizeHandlers(this.m_element, shape)
     }
 
-    private static createResizeController(handler: HTMLElement, handlerType: HandlerType) {
+    private static createResizeController(handler: HTMLElement, handlerType: string) {
         handler.style.width = '7px'
         handler.style.height = '7px'
         handler.style.position = 'absolute'
@@ -26,40 +32,40 @@ class ResizeHandler {
         handler.style.pointerEvents = 'all'
 
         switch (handlerType) {
-            case "leftBottom":
+            case LEFT_BOTTOM_HANDLER_TYPE:
                 handler.style.bottom = '-5px'
                 handler.style.left = '-5px'
                 break
-            case "leftTop":
+            case LEFT_TOP_HANDLER_TYPE:
                 handler.style.top = '-5px'
                 handler.style.left = '-5px'
                 break
-            case "rightBottom":
-                handler.style.bottom = '-5px'
+            case RIGHT_TOP_HANDLER_TYPE:
+                handler.style.top = '-5px'
                 handler.style.right = '-5px'
                 break
-            case "rightTop":
-                handler.style.top = '-5px'
+            case RIGHT_BOTTOM_HANDLER_TYPE:
+                handler.style.bottom = '-5px'
                 handler.style.right = '-5px'
                 break
         }
     }
 
-    private addResizeHandlers(element: HTMLElement, shapeView: ShapeView) {
+    private addResizeHandlers(element: HTMLElement, shape: Shape) {
         const leftTopResizeController = document.createElement('div')
         const leftBottomResizeController = document.createElement('div')
         const rightTopResizeController = document.createElement('div')
         const rightBottomResizeController = document.createElement('div')
 
-        ResizeHandler.createResizeController(leftTopResizeController, 'leftTop')
-        ResizeHandler.createResizeController(leftBottomResizeController, 'leftBottom')
-        ResizeHandler.createResizeController(rightTopResizeController, 'rightTop')
-        ResizeHandler.createResizeController(rightBottomResizeController, 'rightBottom')
+        ResizeHandler.createResizeController(leftTopResizeController, LEFT_TOP_HANDLER_TYPE)
+        ResizeHandler.createResizeController(leftBottomResizeController, LEFT_BOTTOM_HANDLER_TYPE)
+        ResizeHandler.createResizeController(rightTopResizeController, RIGHT_TOP_HANDLER_TYPE)
+        ResizeHandler.createResizeController(rightBottomResizeController, RIGHT_BOTTOM_HANDLER_TYPE)
 
-        leftTopResizeController.addEventListener('mousedown', this.buildOnMouseDownCallback("leftTop", shapeView))
-        leftBottomResizeController.addEventListener('mousedown',  this.buildOnMouseDownCallback("leftBottom", shapeView))
-        rightTopResizeController.addEventListener('mousedown', this.buildOnMouseDownCallback("rightTop", shapeView))
-        rightBottomResizeController.addEventListener('mousedown',  this.buildOnMouseDownCallback("rightBottom", shapeView))
+        leftTopResizeController.addEventListener('mousedown', this.buildOnMouseDownCallback(LEFT_TOP_HANDLER_TYPE))
+        leftBottomResizeController.addEventListener('mousedown',  this.buildOnMouseDownCallback(LEFT_BOTTOM_HANDLER_TYPE))
+        rightTopResizeController.addEventListener('mousedown', this.buildOnMouseDownCallback(RIGHT_TOP_HANDLER_TYPE))
+        rightBottomResizeController.addEventListener('mousedown',  this.buildOnMouseDownCallback(RIGHT_BOTTOM_HANDLER_TYPE))
 
         element.appendChild(leftTopResizeController)
         element.appendChild(leftBottomResizeController)
@@ -72,53 +78,53 @@ class ResizeHandler {
         window.removeEventListener('mouseup', this.m_onMouseUpCallback)
     }
 
-    // константы для типов
-    private onMouseMove(e: MouseEvent, type: HandlerType, shapeView: ShapeView) {
-        const canvasBounds = this.m_canvas.getCanvasBounders()
-        const shape = shapeView.getModel()
-        const mouseLeft = e.x - canvasBounds.left
-        const mouseTop = e.y - canvasBounds.top
-        // выделить контроллер
+    private onMouseMove(e: MouseEvent, type: string) {
+        const canvasBounds = this.m_parentElement.getBoundingClientRect()
+        const elemBounds = this.m_element.getBoundingClientRect()
+        const mouseX = e.x - canvasBounds.left
+        const mouseY = e.y - canvasBounds.top
+        const left = elemBounds.left - canvasBounds.left
+        const top = elemBounds.top - canvasBounds.top
         switch (type) {
-            case "leftTop":
-                shapeView.setFrame(
-                    mouseLeft,
-                    mouseTop,
-                    (shape.getLeft() - mouseLeft) + shape.getWidth(),
-                    (shape.getTop() - mouseTop) + shape.getHeight(),
+            case LEFT_TOP_HANDLER_TYPE:
+                this.m_controller.resizeShape(
+                    mouseX,
+                    mouseY,
+                    left + elemBounds.width,
+                    top + elemBounds.height,
                 )
                 break
-            case "rightTop":
-                shapeView.setFrame(
-                    shape.getLeft(),
-                    mouseTop,
-                    mouseLeft - shape.getLeft(),
-                    (shape.getTop() - mouseTop) + shape.getHeight(),
+            case RIGHT_TOP_HANDLER_TYPE:
+                this.m_controller.resizeShape(
+                    left,
+                    mouseY,
+                    mouseX,
+                    top + elemBounds.height,
                 )
                 break
-            case "leftBottom":
-                shapeView.setFrame(
-                    mouseLeft,
-                    shape.getTop(),
-                    (shape.getLeft() - mouseLeft) + shape.getWidth(),
-                    mouseTop - shape.getTop(),
+            case LEFT_BOTTOM_HANDLER_TYPE:
+                this.m_controller.resizeShape(
+                    mouseX,
+                    top,
+                    left  + elemBounds.width,
+                    mouseY,
                 )
                 break
-            case "rightBottom":
-                shapeView.setFrame(
-                    shape.getLeft(),
-                    shape.getTop(),
-                    mouseLeft - shape.getLeft(),
-                    mouseTop - shape.getTop(),
+            case RIGHT_BOTTOM_HANDLER_TYPE:
+                this.m_controller.resizeShape(
+                    left,
+                    top,
+                    mouseX,
+                    mouseY,
                 )
                 break
         }
     }
 
-    private buildOnMouseDownCallback(type: HandlerType, shapeView: ShapeView) {
+    private buildOnMouseDownCallback(type: string) {
         return (e: MouseEvent) => {
             e.preventDefault()
-            this.m_onMouseMoveCallback = (e) => {this.onMouseMove(e, type, shapeView)}
+            this.m_onMouseMoveCallback = (e) => {this.onMouseMove(e, type)}
             this.m_onMouseUpCallback = () => {this.onMouseUp()}
             window.addEventListener('mousemove', this.m_onMouseMoveCallback)
             window.addEventListener('mouseup', this.m_onMouseUpCallback)

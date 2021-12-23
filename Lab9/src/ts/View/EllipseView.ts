@@ -1,22 +1,20 @@
 import { Shape } from "../Model/Shape";
 import { ShapeView } from "./ShapeView";
-import {CanvasView} from "./CanvasView";
 
 class EllipseView extends ShapeView
 {
-    constructor(model: Shape, canvas: CanvasView) {
-        super(model, canvas)
+    constructor(model: Shape, parentElement: HTMLElement) {
+        super(model, parentElement)
     }
-    getShapeSVG(): string {
+    protected getShapeSVG(): string {
         const model = this.getModel()
-        const width = model.getWidth()
-        const height = model.getHeight()
+        const frame = model.getFrame()
         return `<svg
             xmlns='http://www.w3.org/2000/svg'
-            width='${width}'
-            height='${height}'
-            viewPort='0 0 ${width} ${height}'>"
-            <ellipse rx='${width / 2}' ry='${height / 2}' cx='${width / 2}' cy='${height / 2}' fill="pink" />
+            width='${frame.width}'
+            height='${frame.height}'
+            viewPort='0 0 ${frame.width} ${frame.height}'>"
+            <ellipse rx='${frame.width / 2}' ry='${frame.height / 2}' cx='${frame.width / 2}' cy='${frame.height / 2}' fill="pink" />
         </svg>`
     }
 }

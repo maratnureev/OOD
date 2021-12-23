@@ -1,24 +1,19 @@
 import {IEvent, Event} from "../Event";
 import {ShapeType} from "./ShapeType";
 import {Canvas} from "./Canvas";
+import {Frame} from "./Frame";
 
 class Shape
 {
-    private readonly m_id: number
+    private readonly m_id: string
     private readonly m_type: ShapeType
-    private m_left: number
-    private m_width: number
-    private m_height: number
-    private m_top: number
-    private m_canvas: Canvas
+    private readonly m_canvas: Canvas
+    private m_frame: Frame
     private onFrameChanged: IEvent<void> = new Event<void>()
 
-    constructor (id: number, type: ShapeType, left: number, top: number, width: number, height: number, canvas: Canvas) {
+    constructor (id: string, frame: Frame, type: ShapeType, canvas: Canvas) {
         this.m_canvas = canvas
-        this.m_width = width
-        this.m_height = height
-        this.m_left = left
-        this.m_top = top
+        this.m_frame = frame
         this.m_id = id
         this.m_type = type
     }
@@ -26,39 +21,44 @@ class Shape
     getOnFrameChanged() {
         return this.onFrameChanged
     }
+
     getId() {
         return this.m_id
     }
-    getWidth() {
-        return this.m_width
-    }
-    getHeight() {
-        return this.m_height
+
+    getFrame() {
+        return this.m_frame
     }
 
-    // этой логике здесь не место. Вынести параметры во Frame 
-    setFrame(left: number, top: number, width: number, height: number) {
-        const right = Math.min(Math.max(left + width, width), this.m_canvas.getWidth())
-        const bottom = Math.min(Math.max(top + height, height), this.m_canvas.getHeight())
-        left = Math.min(Math.max(left, 0), this.m_canvas.getWidth() - this.m_width)
-        top = Math.min(Math.max(top, 0), this.m_canvas.getHeight() - this.m_height)
-        this.m_left = Math.min(left, this.m_left + this.m_width)
-        this.m_top = Math.min(top, this.m_top + this.m_height)
-        this.m_width = Math.max(right - left, 0)
-        this.m_height = Math.max(bottom - top, 0)
+    setFrame(frame: Frame) {
+        this.m_frame = frame
         this.onFrameChanged.dispatch()
     }
-    getLeft() {
-        return this.m_left
-    }
-    getTop() {
-        return this.m_top
-    }
+
     getType() {
         return this.m_type
     }
+
+    getCanvas() {
+        return this.m_canvas
+    }
+
+    serialize() {
+        return {
+            id: this.m_id,
+            frame: this.m_frame,
+            type: this.m_type,
+        }
+    }
+}
+
+type SerializedShape = {
+    id: string,
+    frame: Frame
+    type: ShapeType
 }
 
 export {
-    Shape,
-}
+    Shape
+};
+export type { SerializedShape };

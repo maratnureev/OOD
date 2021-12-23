@@ -1,23 +1,20 @@
 import {ShapeController} from "../Controller/ShapeController";
 import {Shape} from "../Model/Shape";
 import {IEvent, Event} from "../Event";
-import {CanvasView} from "./CanvasView";
 
-
-// Передавать HTMLelement вместо канваса
 class DragAndDropHandler {
     private readonly m_controller: ShapeController
     private readonly m_model: Shape
-    private m_canvas: CanvasView
+    private m_parentElement: HTMLElement
     private m_element: HTMLElement
     private m_shapeSelected: IEvent<void> = new Event()
     private m_mouseMovedCallback: (e:MouseEvent) => void = () => {}
     private m_mouseUpCallback: () => void = () => {}
 
-    constructor(model: Shape, canvas: CanvasView, controller: ShapeController, element: HTMLElement) {
+    constructor(model: Shape, parentElement: HTMLElement, controller: ShapeController, element: HTMLElement) {
         this.m_model = model
         this.m_controller = controller
-        this.m_canvas = canvas
+        this.m_parentElement = parentElement
         this.m_element = element;
     }
 
@@ -35,18 +32,16 @@ class DragAndDropHandler {
     }
 
     private onShapeMove(e: MouseEvent, leftOffset: number, topOffset: number) {
-        this.m_controller.setFrame(
+        this.m_controller.moveShape(
             e.x - leftOffset,
-            e.y - topOffset,
-            this.m_model.getWidth(),
-            this.m_model.getHeight(),
+            e.y - topOffset
         )
     }
 
     private onShapeMouseDown(e: MouseEvent) {
         if (!e.defaultPrevented) {
             e.preventDefault()
-            const canvasBounders = this.m_canvas.getCanvasBounders()
+            const canvasBounders = this.m_parentElement.getBoundingClientRect()
             const elementBounds = this.m_element.getBoundingClientRect()
             const resultLeftOffset = canvasBounders.left + (e.x - elementBounds.left)
             const resultTopOffset = canvasBounders.top + (e.y - elementBounds.top)
