@@ -14,7 +14,7 @@ class CanvasView {
     private m_shapeViews: Map<string, ShapeView> = new Map()
     private m_selectionView: SelectionView
 
-    constructor(model: Canvas) {
+    constructor(model: Canvas, parentElement: HTMLElement) {
         this.m_canvasModel = model
         this.m_controller = new CanvasController(model, this)
         this.m_element = document.createElement('div')
@@ -35,10 +35,14 @@ class CanvasView {
         this.m_canvasModel.getOnSelectedShapeChanged().add(
             (shapeId) => this.selectShape(shapeId)
         )
+        this.render(parentElement)
     }
 
-    //render можно вызвать несколько раз
-    render(parentElement: HTMLElement) {
+    remove() {
+        this.m_element.remove()
+    }
+
+    private render(parentElement: HTMLElement) {
         const onShapeSelectedCallback = (e: MouseEvent) => {
             if (!e.defaultPrevented) {
                 this.m_controller.selectShape(null)
@@ -46,17 +50,8 @@ class CanvasView {
         }
         this.m_element.addEventListener('mousedown', onShapeSelectedCallback)
         parentElement.appendChild(this.m_element)
-        this.m_shapeViews.forEach(
-            (shapeView: ShapeView) => {
-                shapeView.render(this.m_element)
-            }
-        )
     }
-
-    remove() {
-        this.m_element.remove()
-    }
-
+    
     private selectShape(shapeId: string|null) {
         if (shapeId === null) {
             this.m_selectionView.removeSelection()

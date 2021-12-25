@@ -9,7 +9,7 @@ class ToolbarView {
     private m_uploadDocumentButton: ButtonView
     private readonly m_toolbarHtml: HTMLElement
 
-    constructor(createRectFn: () => void, createTriangleFn: () => void, createEllipseFn: () => void, deleteFn: () => void, saveFn: () => void, uploadFn: () => void) {
+    constructor(createRectFn: () => void, createTriangleFn: () => void, createEllipseFn: () => void, deleteFn: () => void, saveFn: () => void, uploadFn: () => void, parentElement: HTMLElement) {
         this.m_toolbarHtml = document.createElement('div')
         this.m_createRectangleButton = new ButtonView('Rectangle', 'button')
         this.m_createRectangleButton.getOnClickSignal().add(() => createRectFn())
@@ -23,9 +23,10 @@ class ToolbarView {
         this.m_saveDocumentButton.getOnClickSignal().add(() => saveFn())
         this.m_uploadDocumentButton = new ButtonView('Upload', 'button')
         this.m_uploadDocumentButton.getOnClickSignal().add(() => uploadFn())
+        this.render(parentElement)
     }
 
-    render(parentElement: HTMLElement) {
+    private render(parentElement: HTMLElement) {
         this.m_toolbarHtml.classList.add('toolbar')
         parentElement.appendChild(this.m_toolbarHtml)
         this.m_createRectangleButton.render(this.m_toolbarHtml)

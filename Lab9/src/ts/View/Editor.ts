@@ -20,7 +20,6 @@ class Editor {
     constructor() {
         this.m_element = document.getElementById("editor") as HTMLElement
         this.m_canvasModel = new Canvas(DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT)
-        this.m_canvasView = new CanvasView(this.m_canvasModel)
         this.m_controller = new ToolbarController(this.m_canvasModel)
         this.m_toolbarView = new ToolbarView(
             () => this.createShape(ShapeType.Rectangle),
@@ -28,20 +27,16 @@ class Editor {
             () => this.createShape(ShapeType.Ellipse),
             () => this.deleteShape(),
             () => this.saveDocument(),
-            () => this.uploadFile((object) => this.uploadDocument(object))
+            () => this.uploadFile((object) => this.uploadDocument(object)),
+            this.m_element
         )
+        this.m_canvasView = new CanvasView(this.m_canvasModel, this.m_element)
         const onDeleteButtonPressed = (e: KeyboardEvent) => {
             if (e.key === 'Delete') {
                 this.deleteShape()
             }
         }
         window.addEventListener('keydown', onDeleteButtonPressed)
-        this.render()
-    }
-
-    private render() {
-        this.m_toolbarView.render(this.m_element)
-        this.m_canvasView.render(this.m_element)
     }
 
     private createShape(type: ShapeType) {
@@ -59,7 +54,6 @@ class Editor {
             this.m_canvasModel
         )
         this.m_controller.addShape(shape)
-        this.render()
     }
 
     private deleteShape() {
@@ -78,12 +72,11 @@ class Editor {
         let canvas = document as SerializedCanvas
         this.m_canvasView.remove()
         this.m_canvasModel = new Canvas(canvas.width, canvas.height)
-        this.m_canvasView = new CanvasView(this.m_canvasModel)
+        this.m_canvasView = new CanvasView(this.m_canvasModel, this.m_element)
         const shapes = canvas.shapes.map(shape => new Shape(shape.id, shape.frame, shape.type, this.m_canvasModel))
         shapes.forEach(shape => {
             this.m_canvasModel.addShape(shape)
         })
-        this.m_canvasView.render(this.m_element)
     }
 
     private static saveFile(content: string, fileName: string) {

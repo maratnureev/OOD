@@ -23,6 +23,7 @@ abstract class ShapeView
         this.m_dragAndDropHandler.getShapeSelected().add(() => {
             this.m_shapeSelected.dispatch(this.m_shape.getId())
         })
+        this.render(parentElement)
     }
 
     protected abstract getShapeSVG(): string
@@ -50,7 +51,7 @@ abstract class ShapeView
         this.m_element.innerHTML = this.getShapeSVG()
     }
 
-    render(parentElement: HTMLElement) {
+    private render(parentElement: HTMLElement) {
         this.m_element.remove()
         this.resize()
         this.m_element.onmousedown = e => this.m_dragAndDropHandler.handle(e)
