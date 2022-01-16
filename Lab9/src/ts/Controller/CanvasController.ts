@@ -1,17 +1,15 @@
-import {Canvas} from "../Model/Canvas";
-import {CanvasView} from "../View/CanvasView";
+import { Selection } from "../Model/Selection";
+import { Shape } from "../Model/Shape";
 
 class CanvasController
 {
-    private m_model: Canvas;
-    private m_view: CanvasView;
-    constructor(model: Canvas, view: CanvasView) {
-        this.m_model = model
-        this.m_view = view
+    private m_selection: Selection;
+    constructor(selection: Selection) {
+        this.m_selection = selection
     }
 
-    selectShape(shapeId: string|null) {
-        this.m_model.selectShape(shapeId)
+    selectShape(shape: Shape|null) {
+        this.m_selection.selectShape(shape)
     }
 }
 

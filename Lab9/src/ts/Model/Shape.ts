@@ -42,23 +42,8 @@ class Shape
     getCanvas() {
         return this.m_canvas
     }
-
-    serialize() {
-        return {
-            id: this.m_id,
-            frame: this.m_frame,
-            type: this.m_type,
-        }
-    }
-}
-
-type SerializedShape = {
-    id: string,
-    frame: Frame
-    type: ShapeType
 }
 
 export {
     Shape
 };
-export type { SerializedShape };

@@ -1,4 +1,3 @@
-import {ShapeView} from "./ShapeView";
 import {Shape} from "../Model/Shape";
 import {SelectionController} from "../Controller/SelectionController";
 

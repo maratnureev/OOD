@@ -6,23 +6,26 @@ import {EllipseView} from "./EllipseView";
 import {RectangleView} from "./RectangleView";
 import {TriangleView} from "./TriangleView";
 import {SelectionView} from "./SelectionView";
+import { Selection } from "../Model/Selection";
 
 class CanvasView {
     private readonly m_element: HTMLElement
     private readonly m_canvasModel: Canvas
+    private readonly m_selectionModel: Selection
+    private readonly m_selectionView: SelectionView
     private m_controller: CanvasController
     private m_shapeViews: Map<string, ShapeView> = new Map()
-    private m_selectionView: SelectionView
 
-    constructor(model: Canvas, parentElement: HTMLElement) {
-        this.m_canvasModel = model
-        this.m_controller = new CanvasController(model, this)
+    constructor(canvas: Canvas, selection: Selection, parentElement: HTMLElement) {
+        this.m_canvasModel = canvas
+        this.m_selectionModel = selection
+        this.m_controller = new CanvasController(selection)
         this.m_element = document.createElement('div')
         this.m_element.classList.add('canvas')
         this.m_element.style.width = `${this.m_canvasModel.getWidth()}px`
         this.m_element.style.height = `${this.m_canvasModel.getHeight()}px`
         this.m_element.style.boxShadow = '0 0 0 2px black'
-        this.m_selectionView = new SelectionView(this.m_element, this.m_canvasModel)
+        this.m_selectionView = new SelectionView(this.m_element, this.m_canvasModel, this.m_selectionModel)
         this.m_canvasModel.getShapeIds().forEach(
             (shapeId ) => this.createShapeView(shapeId)
         )
@@ -30,11 +33,12 @@ class CanvasView {
             (shapeId) => this.createShapeView(shapeId)
         )
         this.m_canvasModel.getOnShapeRemoved().add(
-            (shapeId) => this.removeShapeView(shapeId)
+            (shapeId) => {
+                this.removeShapeView(shapeId)
+                this.m_controller.selectShape(null)
+            }
         )
-        this.m_canvasModel.getOnSelectedShapeChanged().add(
-            (shapeId) => this.selectShape(shapeId)
-        )
+        
         this.render(parentElement)
     }
 
@@ -52,17 +56,6 @@ class CanvasView {
         parentElement.appendChild(this.m_element)
     }
     
-    private selectShape(shapeId: string|null) {
-        if (shapeId === null) {
-            this.m_selectionView.removeSelection()
-            return
-        }
-        const selectedShape = this.m_canvasModel.getShapeById(shapeId)
-        if (selectedShape) {
-            this.m_selectionView.selectShape(selectedShape)
-        }
-    }
-
     private removeShapeView(shapeId: string) {
         const shapeView = this.m_shapeViews.get(shapeId)
         if (shapeView) {
@@ -90,7 +83,10 @@ class CanvasView {
         }
         this.m_shapeViews.set(shapeId, view)
         view.getShapeSelected().add((shapeId) => {
-            this.m_controller.selectShape(shapeId)
+            const shape = this.m_canvasModel.getShapeById(shapeId)
+            if (shape) {
+                this.m_controller.selectShape(shape)
+            }
         })
     }
 }

@@ -2,8 +2,11 @@ import {Shape} from "../Model/Shape";
 import {ToolbarView} from "./ToolbarView";
 import {ShapeType} from "../Model/ShapeType";
 import {CanvasView} from "./CanvasView";
-import {Canvas, SerializedCanvas} from "../Model/Canvas";
+import {Canvas} from "../Model/Canvas";
 import {ToolbarController} from "../Controller/ToolbarController";
+import { Selection } from "../Model/Selection";
+import { JsonSerializer, SerializedCanvas, Serializer } from "../Serializer";
+import { JsonFileManager, FileManager } from "../Loader";
 
 const DEFAULT_SHAPE_WIDTH = 100;
 const DEFAULT_SHAPE_HEIGHT = 100;
@@ -12,25 +15,32 @@ const DEFAULT_CANVAS_HEIGHT = 480
 
 class Editor {
     private readonly m_element: HTMLElement
+    private readonly m_toolbarView: ToolbarView
     private m_canvasModel: Canvas
     private m_canvasView: CanvasView
     private m_controller: ToolbarController
-    private m_toolbarView: ToolbarView
+    private m_selectionModel: Selection
+    private m_fileManager: FileManager
+    private m_serializer: Serializer
 
     constructor() {
         this.m_element = document.getElementById("editor") as HTMLElement
-        this.m_canvasModel = new Canvas(DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT)
-        this.m_controller = new ToolbarController(this.m_canvasModel)
         this.m_toolbarView = new ToolbarView(
             () => this.createShape(ShapeType.Rectangle),
             () => this.createShape(ShapeType.Triangle),
             () => this.createShape(ShapeType.Ellipse),
             () => this.deleteShape(),
             () => this.saveDocument(),
-            () => this.uploadFile((object) => this.uploadDocument(object)),
+            () => this.m_fileManager.uploadFile((canvas) => this.loadDocument(canvas)),
             this.m_element
         )
-        this.m_canvasView = new CanvasView(this.m_canvasModel, this.m_element)
+        const canvasContext = this.createCanvasContext(DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT)
+        this.m_serializer = new JsonSerializer
+        this.m_fileManager = new JsonFileManager
+        this.m_canvasModel = canvasContext.canvasModel
+        this.m_selectionModel = canvasContext.selection
+        this.m_controller = new ToolbarController(this.m_canvasModel)
+        this.m_canvasView = canvasContext.canvasView
         const onDeleteButtonPressed = (e: KeyboardEvent) => {
             if (e.key === 'Delete') {
                 this.deleteShape()
@@ -57,55 +67,36 @@ class Editor {
     }
 
     private deleteShape() {
-        const selectedShapeId = this.m_canvasModel.getSelectedShapeId()
-        if (selectedShapeId !== null) {
-            this.m_controller.selectShape(null)
-            this.m_controller.removeShape(selectedShapeId)
+        const selectedShape = this.m_selectionModel.getSelectedShape()
+        if (selectedShape !== null) {
+            this.m_controller.removeShape(selectedShape.getId())
         }
     }
 
+    private createCanvasContext(width: number, height: number) {
+        const canvasModel = new Canvas(width, height)
+        const selection = new Selection
+        const canvasView = new CanvasView(canvasModel, selection, this.m_element)    
+        return {
+            canvasModel,
+            selection,
+            canvasView
+        }
+    }   
+
     private saveDocument() {
-        Editor.saveFile(JSON.stringify(this.m_canvasModel.serialize()), 'canvas.json')
+        this.m_fileManager.saveFile(this.m_serializer.serializeCanvas(this.m_canvasModel), 'canvas.json')
     }
 
-    private uploadDocument(document: Object) {
-        let canvas = document as SerializedCanvas
+    private loadDocument(canvas: SerializedCanvas) {
         this.m_canvasView.remove()
-        this.m_canvasModel = new Canvas(canvas.width, canvas.height)
-        this.m_canvasView = new CanvasView(this.m_canvasModel, this.m_element)
+        const canvasContext = this.createCanvasContext(canvas.width, canvas.height)
+        this.m_canvasModel = canvasContext.canvasModel
+        this.m_selectionModel = canvasContext.selection
+        this.m_canvasView = canvasContext.canvasView
         const shapes = canvas.shapes.map(shape => new Shape(shape.id, shape.frame, shape.type, this.m_canvasModel))
         shapes.forEach(shape => {
             this.m_canvasModel.addShape(shape)
-        })
-    }
-
-    private static saveFile(content: string, fileName: string) {
-        const a = document.createElement('a')
-        const file = new Blob([content], {type: 'text/plain'})
-        a.href = URL.createObjectURL(file)
-        a.download = fileName
-        a.click()
-    }
-
-    private uploadFile(onUploadCallback: (result: Object) => void) {
-        const input = document.createElement('input')
-        input.setAttribute('type', 'file')
-        input.click()
-        input.addEventListener("change", () => {
-            const reader = new FileReader()
-            const selectedFile =  input.files && input.files[0]
-            if (selectedFile) {
-                reader.onload = () => {
-                    if (typeof reader.result === 'string') {
-                        try {
-                            onUploadCallback(JSON.parse(reader.result))
-                        } catch (e) {
-                            alert('Invalid json file')
-                        }
-                    }
-                }
-                reader.readAsText(selectedFile)
-            }
         })
     }
 }

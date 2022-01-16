@@ -40,9 +40,10 @@ abstract class ShapeView
         this.m_element.remove()
     }
 
-    resize() {
+    private resize() {
         const frame = this.m_shape.getFrame()
 
+        //Изменять атрибуты SVG
         this.m_element.style.left = `${frame.left}px`
         this.m_element.style.top = `${frame.top}px`
         this.m_element.style.width = `${frame.width}px`

@@ -1,22 +1,20 @@
 import {Canvas} from "../Model/Canvas";
+import { Selection } from "../Model/Selection";
 import {Shape} from "../Model/Shape";
 
 class ToolbarController {
-    private m_model: Canvas;
-    constructor(model: Canvas) {
-        this.m_model = model
+    private m_canvas: Canvas
+
+    constructor(canvas: Canvas) {
+        this.m_canvas = canvas
     }
 
     addShape(shape: Shape) {
-        this.m_model.addShape(shape)
+        this.m_canvas.addShape(shape)
     }
 
     removeShape(shapeId: string) {
-        this.m_model.removeShape(shapeId)
-    }
-
-    selectShape(shapeId: string|null) {
-        this.m_model.selectShape(shapeId)
+        this.m_canvas.removeShape(shapeId)
     }
 }
 
